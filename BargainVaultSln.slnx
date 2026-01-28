@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/DataAccess/">
+    <Project Path="BargainVault.Data/BargainVault.Data.csproj" />
+  </Folder>
+  <Folder Name="/Domain/">
+    <Project Path="BargainVault.Domain/BargainVault.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="BargainVault/BargainVault.csproj" />
+  </Folder>
+</Solution>
