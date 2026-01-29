@@ -21,4 +21,10 @@
 
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="Assets\BargainVaultLogo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
 </Project>

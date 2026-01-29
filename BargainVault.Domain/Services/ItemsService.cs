@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using BargainVault.Domain.Models;
+using Npgsql;
 using System.Configuration;
 
 namespace BargainVault.Domain.Services
@@ -49,6 +50,74 @@ namespace BargainVault.Domain.Services
             var result = await cmd.ExecuteScalarAsync();
 
             return Convert.ToInt32(result);
+        }
+
+        public async Task<List<ItemDto>> GetItemsAsync()
+        {
+            var results = new List<ItemDto>();
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            const string sql = @"
+                    SELECT item_id, lot_number, title, description, created_at
+                    FROM public.items
+                    ORDER BY created_at DESC;
+                ";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                results.Add(new ItemDto
+                {
+                    ItemId = reader.GetInt32(0),
+                    LotNumber = reader.GetInt32(1),
+                    Title = reader.GetString(2),
+                    Description = reader.IsDBNull(3) ? null : reader.GetString(3),
+                    CreatedAt = reader.GetDateTime(4)
+                });
+            }
+
+            return results;
+        }
+
+        public async Task UpdateItemAsync(
+                int itemId,
+                int lotNumber,
+                string title,
+                string description,
+                string imagePath,
+                int quantity,
+                string enteredBy)
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            const string sql = @"
+                    SELECT public.update_item(
+                        @item_id,
+                        @lot_number,
+                        @title,
+                        @description,
+                        @image_path,
+                        @quantity,
+                        @entered_by
+                    );
+                ";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+
+            cmd.Parameters.AddWithValue("item_id", itemId);
+            cmd.Parameters.AddWithValue("lot_number", lotNumber);
+            cmd.Parameters.AddWithValue("title", title);
+            cmd.Parameters.AddWithValue("description", (object?)description ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("image_path", (object?)imagePath ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("quantity", quantity);
+            cmd.Parameters.AddWithValue("entered_by", enteredBy);
+
+            await cmd.ExecuteNonQueryAsync();
         }
 
         public async Task<bool> TestConnectionAsync()
