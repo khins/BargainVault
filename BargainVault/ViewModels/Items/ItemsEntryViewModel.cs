@@ -12,10 +12,20 @@ namespace BargainVault.ViewModels.Items
 {
     public class ItemsEntryViewModel : ViewModelBase
     {
+        private string _originalTitle;
+        private string _originalDescription;
+        private int? _originalLotNumber;
         private readonly IItemsService _itemsService;
         public RelayCommand SaveCommand { get; }
 
         private int ItemId { get; set; }
+
+        private bool _isDirty;
+        public bool IsDirty
+        {
+            get => _isDirty;
+            private set => SetProperty(ref _isDirty, value);
+        }
 
         public ItemsEntryViewModel(IItemsService itemsService, ItemDto item) 
             : this(itemsService)
@@ -32,6 +42,7 @@ namespace BargainVault.ViewModels.Items
             NewEntryCommand = new RelayCommand(NewEntry);
             CloseCommand = new RelayCommand(Close);
             LoadCommand = new RelayCommand(async () => await LoadAsync());
+            CaptureOriginalValues();
         }
 
         public ItemsEntryViewModel(IItemsService itemsService)
@@ -45,9 +56,19 @@ namespace BargainVault.ViewModels.Items
                     async () => await SaveAsync(),
                     CanSave);
             NewEntryCommand = new RelayCommand(NewEntry);
+
+            CaptureOriginalValues();
         }
 
         private bool IsEditMode { get; }
+
+        private void CaptureOriginalValues()
+        {
+            _originalTitle = Title;
+            _originalDescription = Description;
+            _originalLotNumber = LotNumber;
+            IsDirty = false;
+        }
 
 
         public ObservableCollection<ItemDto> Items { get; }
@@ -66,7 +87,11 @@ namespace BargainVault.ViewModels.Items
         public int LotNumber
         {
             get => _lotNumber;
-            set => SetProperty(ref _lotNumber, value);
+            set
+            {
+                SetProperty(ref _lotNumber, value);
+                UpdateDirtyState();
+            }
         }
 
         private string _title;
@@ -77,6 +102,7 @@ namespace BargainVault.ViewModels.Items
             {
                 SetProperty(ref _title, value);
                 SaveCommand.RaiseCanExecuteChanged();
+                UpdateDirtyState();
             }
         }
 
@@ -84,7 +110,11 @@ namespace BargainVault.ViewModels.Items
         public string Description
         {
             get => _description;
-            set => SetProperty(ref _description, value);
+            set
+            {
+                SetProperty(ref _description, value);
+                UpdateDirtyState();
+            }
         }
 
         private DateTime? _createdAt;
@@ -94,11 +124,24 @@ namespace BargainVault.ViewModels.Items
             private set => SetProperty(ref _createdAt, value);
         }
 
+        private void UpdateDirtyState()
+        {
+            IsDirty =
+                Title != _originalTitle ||
+                Description != _originalDescription ||
+                LotNumber != _originalLotNumber;
+
+            SaveCommand?.RaiseCanExecuteChanged();
+        }
+
+
         public ICommand NewEntryCommand { get; }
         public ICommand CloseCommand { get; }
 
         private bool CanSave()
-            => !string.IsNullOrWhiteSpace(Title);
+        {
+            return IsDirty && !string.IsNullOrWhiteSpace(Title);
+        }
 
         private async Task SaveAsync()
         {

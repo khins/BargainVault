@@ -54,7 +54,7 @@
             <Button Content="Save Entry"
                     Width="100"
                     Margin="5"
-                    Command="{Binding SaveCommand}"/>
+                    Command="{Binding SaveCommand}" />
 
             <Button Content="New Entry"
                     Width="100"
