@@ -46,11 +46,6 @@
                                     Binding="{Binding Title}"
                                     Width="3*"/>
 
-                <!-- DESCRIPTION: secondary -->
-                <DataGridTextColumn Header="Description"
-                                    Binding="{Binding Description}"
-                                    Width="2*"/>
-
                 <DataGridTextColumn Header="Created"
                                     Binding="{Binding CreatedAt, StringFormat=\{0:g\}}"
                                     Width="160"/>
