@@ -38,5 +38,28 @@ namespace BargainVault.Views.Items
             // Refresh list after edit
             _ = vm.LoadAsync();
         }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void EditSelected_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is not ItemsListViewModel vm || vm.SelectedItem == null)
+                return;
+
+            var editView = App.Services.GetRequiredService<ItemsEntryView>();
+
+            editView.DataContext = new ItemsEntryViewModel(
+                App.Services.GetRequiredService<IItemsService>(),
+                vm.SelectedItem);
+
+            editView.Owner = this;
+            editView.ShowDialog();
+
+            // Refresh list after edit
+            _ = vm.LoadAsync();
+        }
     }
 }

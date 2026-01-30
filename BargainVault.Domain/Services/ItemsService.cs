@@ -76,7 +76,7 @@ namespace BargainVault.Domain.Services
                     LotNumber = reader.GetInt32(1),
                     Title = reader.GetString(2),
                     Description = reader.IsDBNull(3) ? null : reader.GetString(3),
-                    CreatedAt = reader.GetDateTime(4)
+                    CreatedAt = reader.IsDBNull(4) ? null : reader.GetDateTime(4)
                 });
             }
 

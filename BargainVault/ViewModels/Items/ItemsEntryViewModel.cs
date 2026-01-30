@@ -17,7 +17,8 @@ namespace BargainVault.ViewModels.Items
 
         private int ItemId { get; set; }
 
-        public ItemsEntryViewModel(IItemsService itemsService, ItemDto item)
+        public ItemsEntryViewModel(IItemsService itemsService, ItemDto item) 
+            : this(itemsService)
         {
             _itemsService = itemsService;
 
@@ -40,7 +41,9 @@ namespace BargainVault.ViewModels.Items
             CreatedAt = DateTime.Now;
             IsEditMode = false;
 
-            SaveCommand = new RelayCommand(async () => await SaveAsync(), CanSave);
+            SaveCommand = new RelayCommand(
+                    async () => await SaveAsync(),
+                    CanSave);
             NewEntryCommand = new RelayCommand(NewEntry);
         }
 
@@ -84,8 +87,8 @@ namespace BargainVault.ViewModels.Items
             set => SetProperty(ref _description, value);
         }
 
-        private DateTime _createdAt;
-        public DateTime CreatedAt
+        private DateTime? _createdAt;
+        public DateTime? CreatedAt
         {
             get => _createdAt;
             private set => SetProperty(ref _createdAt, value);

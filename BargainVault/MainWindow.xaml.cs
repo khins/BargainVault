@@ -47,7 +47,8 @@ namespace BargainVault
 
         private void OpenItemsList_Click(object sender, RoutedEventArgs e)
         {
-            
+            var view = App.Services.GetRequiredService<ItemsListView>();
+            view.ShowDialog();
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)

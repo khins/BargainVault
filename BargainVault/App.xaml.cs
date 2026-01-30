@@ -1,5 +1,6 @@
 ﻿using BargainVault.Domain.Services;
 using BargainVault.ViewModels.Items;
+using BargainVault.ViewModels.Items.BargainVault.ViewModels.Items;
 using BargainVault.Views.Items;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +43,8 @@ namespace BargainVault
             services.AddSingleton<IItemsService, ItemsService>();
             services.AddTransient<ItemsEntryViewModel>();
             services.AddTransient<ItemsEntryView>();
+            services.AddTransient<ItemsListView>();
+            services.AddTransient<ItemsListViewModel>();
 
             // Views / ViewModels
             services.AddSingleton<MainWindow>();
