@@ -1,4 +1,6 @@
 ﻿using BargainVault.Domain.Services;
+using BargainVault.Views;
+using BargainVault.Views.Acquisitions;
 using BargainVault.Views.Items;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
@@ -54,6 +56,44 @@ namespace BargainVault
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private async void TestAcquisitionInsert_Click(object sender, RoutedEventArgs e)
+        {
+            var service = App.Services.GetRequiredService<IAcquisitionsService>();
+
+            var id = await service.InsertAcquisitionAsync(
+                itemId: 713,
+                sourceType: "Auction",
+                auctionSiteId: 1,
+                dateAcquired: DateTime.Today,
+                qtyAcquired: 1,
+                unitHammerPrice: 100m,
+                buyerPremium: 10m,
+                taxRate: 0.0825m,
+                salesTaxPaid: 9.90m,
+                totalSettlement: 119.90m,
+                statusId: 1,
+                personal: false,
+                businessExpense: true,
+                enteredBy: Environment.UserName
+            );
+
+            MessageBox.Show($"Inserted Acquisition ID: {id}");
+        }
+
+        private void OpenAcquisitionEntry_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<AcquisitionsEntryView>();
+            view.Owner = this;
+            view.ShowDialog();
+        }
+
+        private void OpenAcquisitionsList_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<AcquisitionsListView>();
+            view.Owner = this;
+            view.ShowDialog();
         }
     }
 }

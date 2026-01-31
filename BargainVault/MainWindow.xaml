@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="BargainVault"
         Width="420"
-        Height="460"
+        Height="500"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
 
@@ -44,11 +44,24 @@
                         Margin="0,0,0,10"
                         Click="OpenItemsList_Click"/>
 
+                <Button Content="New Acquisition"
+                        Width="160"
+                        Height="40"
+                        Margin="0,0,0,10"
+                        Click="OpenAcquisitionEntry_Click"/>
+                <Button Content="Acquisitions List"
+                        Width="160"
+                        Height="36"
+                        Margin="4"
+                        Click="OpenAcquisitionsList_Click"/>
+
                 <!-- Exit -->
                 <Button Content="Exit"
                         Height="36"
                         Margin="0,16,0,0"
                         Click="Exit_Click"/>
+
+
             </StackPanel>
         </Border>
     </Grid>
