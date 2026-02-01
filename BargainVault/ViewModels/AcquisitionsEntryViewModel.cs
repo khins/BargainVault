@@ -310,12 +310,23 @@ namespace BargainVault.ViewModels.Acquisitions
 
             // TEMP: hardcoded lookups (replace later with services)
             AuctionSites.Clear();
-            AuctionSites.Add(new LookupDto { Id = 1, Name = "Auction House" });
-            AuctionSites.Add(new LookupDto { Id = 2, Name = "Estate Sale" });
+            AuctionSites.Add(new LookupDto { Id = 1, Name = "Back Porch Auctions" });
+            AuctionSites.Add(new LookupDto { Id = 2, Name = "Lot 66 Auctions" });
+            AuctionSites.Add(new LookupDto { Id = 1, Name = "ATX Auctions Ozarks" });
+            AuctionSites.Add(new LookupDto { Id = 2, Name = "Knight Auction" });
+            AuctionSites.Add(new LookupDto { Id = 1, Name = "Dirla Bid" });
+            AuctionSites.Add(new LookupDto { Id = 2, Name = "None" });
+            AuctionSites.Add(new LookupDto { Id = 1, Name = "Outpost" });
+            AuctionSites.Add(new LookupDto { Id = 2, Name = "Emaries" });
+            AuctionSites.Add(new LookupDto { Id = 2, Name = "Justbid" });
 
             Statuses.Clear();
-            Statuses.Add(new LookupDto { Id = 1, Name = "Purchased" });
-            Statuses.Add(new LookupDto { Id = 2, Name = "Pending" });
+            Statuses.Add(new LookupDto { Id = 1, Name = "Staged" });
+            Statuses.Add(new LookupDto { Id = 2, Name = "InBooth" });
+            Statuses.Add(new LookupDto { Id = 2, Name = "OnHold" });
+            Statuses.Add(new LookupDto { Id = 2, Name = "Sold" });  
+            Statuses.Add(new LookupDto { Id = 2, Name = "Personal" });
+            Statuses.Add(new LookupDto { Id = 2, Name = "Inventory" });
         }
 
         public void RaiseCanExecuteChanged()

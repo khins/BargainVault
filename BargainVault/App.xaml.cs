@@ -1,4 +1,5 @@
 ﻿using BargainVault.Domain.Services;
+using BargainVault.ViewModels;
 using BargainVault.ViewModels.Acquisitions;
 using BargainVault.ViewModels.Items;
 using BargainVault.ViewModels.Items.BargainVault.ViewModels.Items;
@@ -54,6 +55,10 @@ namespace BargainVault
             services.AddTransient<AcquisitionsEntryView>();
             services.AddTransient<AcquisitionsListViewModel>();
             services.AddTransient<AcquisitionsListView>();
+            //Sales
+            services.AddScoped<ISalesService, SalesService>();
+            services.AddTransient<SalesEntryViewModel>();
+            services.AddTransient<SalesEntryView>();
 
             // Views / ViewModels
             services.AddSingleton<MainWindow>();

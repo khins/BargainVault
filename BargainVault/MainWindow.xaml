@@ -112,6 +112,10 @@
         Style="{StaticResource MainMenuButtonStyle}"
         Click="OpenAcquisitionsList_Click"/>
 
+                <Button Content="💰 New Sale"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="OpenSalesEntry_Click"/>
+
                 <Button Content="Exit"
         Style="{StaticResource MainMenuButtonStyle}"
         Click="Exit_Click"/>

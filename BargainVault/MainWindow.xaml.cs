@@ -95,5 +95,12 @@ namespace BargainVault
             view.Owner = this;
             view.ShowDialog();
         }
+
+        private void OpenSalesEntry_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<SalesEntryView>();
+            view.Owner = this;
+            view.ShowDialog();
+        }
     }
 }
