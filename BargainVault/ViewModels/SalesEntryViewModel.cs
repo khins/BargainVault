@@ -16,6 +16,7 @@ namespace BargainVault.ViewModels
         private int? _saleId;
         private readonly ISalesService _salesService;
         private readonly IItemsService _itemsService;
+        private readonly IBoothsService _boothsService;
        
         public SalesEntryViewModel(ISalesService service)
         {
@@ -29,12 +30,15 @@ namespace BargainVault.ViewModels
 
         public SalesEntryViewModel(
             ISalesService salesService,
-            IItemsService itemsService)
+            IItemsService itemsService,
+            IBoothsService boothsService)
         {
             _salesService = salesService;
             _itemsService = itemsService;
+            _boothsService = boothsService;
 
             Items = new ObservableCollection<ItemDto>();
+            Booths = new ObservableCollection<BoothDto>();
 
             DateSold = DateTime.Today;
             QtySold = 1;
@@ -42,6 +46,7 @@ namespace BargainVault.ViewModels
             SaveCommand = new RelayCommand(async () => await SaveAsync(), CanSave);
 
             _ = LoadItemsAsync();
+            _ = LoadBoothsAsync();
         }
 
         private async Task LoadItemsAsync()
@@ -52,11 +57,21 @@ namespace BargainVault.ViewModels
                 Items.Add(item);
         }
 
+        private async Task LoadBoothsAsync()
+        {
+            var booths = await _boothsService.GetBoothsAsync();
+
+            foreach (var booth in booths)
+                Booths.Add(booth);
+        }
+
+
         public SalesEntryViewModel(
             ISalesService salesService,
             IItemsService itemsService,
+            IBoothsService boothsService,
             SaleDto dto)
-            : this(salesService, itemsService)
+            : this(salesService, itemsService, boothsService)
         {
             _saleId = dto.SaleId;
 
@@ -70,6 +85,7 @@ namespace BargainVault.ViewModels
         }
 
         public ObservableCollection<ItemDto> Items { get; }
+        public ObservableCollection<BoothDto> Booths { get; }
 
         private int _selectedItemId;
         public int SelectedItemId
@@ -81,6 +97,17 @@ namespace BargainVault.ViewModels
                 {
                     SaveCommand.RaiseCanExecuteChanged();
                 }
+            }
+        }
+
+        private int? _selectedBoothId;
+        public int? SelectedBoothId
+        {
+            get => _selectedBoothId;
+            set
+            {
+                if (SetProperty(ref _selectedBoothId, value))
+                    SaveCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -127,18 +154,18 @@ namespace BargainVault.ViewModels
             var dto = new SaleDto
             {
                 SaleId = _saleId ?? 0,
-                ItemId = ItemId,
+                ItemId = SelectedItemId, 
                 DateSold = DateSold,
                 QtySold = QtySold,
                 ChannelType = ChannelType,
-                BoothId = BoothId,
+                BoothId = SelectedBoothId,
                 UnitSalePrice = UnitSalePrice,
                 DiscountedRate = DiscountedRate
             };
 
             if (_saleId == null)
             {
-                var newId = await _service.InsertSaleAsync(dto, Environment.UserName);
+                var newId = await _salesService.InsertSaleAsync(dto, Environment.UserName);
                 _saleId = newId;
                 MessageBox.Show($"Sale #{newId} saved.", "Saved");
             }

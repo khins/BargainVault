@@ -97,10 +97,16 @@
                        VerticalAlignment="Center"
                        Margin="0,4"/>
 
-            <TextBox Grid.Row="4"
-                     Grid.Column="1"
-                     Text="{Binding BoothId}"
-                     Margin="0,4"/>
+            <ComboBox Grid.Row="4"
+                      Grid.Column="1"
+                      ItemsSource="{Binding Booths}"
+                      DisplayMemberPath="BoothName"
+                      SelectedValuePath="BoothId"
+                      SelectedValue="{Binding SelectedBoothId, Mode=TwoWay}"
+                      Margin="0,4"
+                      IsEditable="True"
+                      IsTextSearchEnabled="True"
+                      ToolTip="Select booth"/>
 
             <!-- Unit Price -->
             <TextBlock Grid.Row="5"

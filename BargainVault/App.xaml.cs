@@ -59,6 +59,9 @@ namespace BargainVault
             services.AddScoped<ISalesService, SalesService>();
             services.AddTransient<SalesEntryViewModel>();
             services.AddTransient<SalesEntryView>();
+            //Booth service
+            services.AddScoped<IBoothsService, BoothsService>();
+
 
             // Views / ViewModels
             services.AddSingleton<MainWindow>();
