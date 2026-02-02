@@ -12,5 +12,9 @@ namespace BargainVault.Domain.Services
         Task DeleteSaleAsync(int saleId, string enteredBy);
 
         Task<SaleDto?> GetSaleByIdAsync(int saleId);
+        Task<List<SalesMonthlySummaryDto>> GetMonthlySalesSummaryAsync();
+        Task<List<SalesMonthlyDetailDto>> GetSalesForMonthAsync(int year, int month);
+
+
     }
 }

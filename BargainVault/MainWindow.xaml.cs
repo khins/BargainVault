@@ -102,5 +102,12 @@ namespace BargainVault
             view.Owner = this;
             view.ShowDialog();
         }
+
+        private void OpenSalesDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<SalesDashboardView>();
+            view.Owner = this;
+            view.ShowDialog();
+        }
     }
 }

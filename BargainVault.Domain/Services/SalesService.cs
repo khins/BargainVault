@@ -105,6 +105,91 @@ namespace BargainVault.Domain.Services
                 DiscountedRate = reader.IsDBNull(7) ? null : reader.GetDecimal(7)
             };
         }
+
+        public async Task<List<SalesMonthlySummaryDto>> GetMonthlySalesSummaryAsync()
+        {
+            var results = new List<SalesMonthlySummaryDto>();
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            const string sql = @"
+                        SELECT
+                            EXTRACT(YEAR FROM date_sold)::int AS year,
+                            EXTRACT(MONTH FROM date_sold)::int AS month,
+                            SUM(qty_sold * unit_sale_price) AS total_sales,
+                            SUM(qty_sold) AS total_quantity
+                        FROM sales
+                        GROUP BY 1, 2
+                        ORDER BY 1 DESC, 2 DESC;
+                    ";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                results.Add(new SalesMonthlySummaryDto
+                {
+                    Year = reader.GetInt32(0),
+                    Month = reader.GetInt32(1),
+                    TotalSales = reader.GetDecimal(2),
+                    TotalQuantity = reader.GetInt32(3)
+                });
+            }
+
+            return results;
+        }
+
+        public async Task<List<SalesMonthlyDetailDto>> GetSalesForMonthAsync(int year, int month)
+        {
+            var results = new List<SalesMonthlyDetailDto>();
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            const string sql = @"
+                    SELECT
+                        s.sale_id,
+                        s.date_sold,
+                        i.title,
+                        s.qty_sold,
+                        s.unit_sale_price,
+                        s.channel_type,
+                        b.booth_name
+                    FROM sales s
+                    JOIN items i ON i.item_id = s.item_id
+                    LEFT JOIN booths b ON b.booth_id = s.booth_id
+                    WHERE
+                        EXTRACT(YEAR FROM s.date_sold) = @year
+                        AND EXTRACT(MONTH FROM s.date_sold) = @month
+                    ORDER BY s.date_sold;
+                ";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("year", year);
+            cmd.Parameters.AddWithValue("month", month);
+
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                results.Add(new SalesMonthlyDetailDto
+                {
+                    SaleId = reader.GetInt32(0),
+                    DateSold = reader.GetDateTime(1),
+                    ItemTitle = reader.GetString(2),
+                    QtySold = reader.GetInt32(3),
+                    UnitSalePrice = reader.GetDecimal(4),
+                    ChannelType = reader.IsDBNull(5) ? null : reader.GetString(5),
+                    BoothName = reader.IsDBNull(6) ? null : reader.GetString(6)
+                });
+            }
+
+            return results;
+        }
+
+
     }
 
 }

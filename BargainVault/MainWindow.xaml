@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="BargainVault"
         Width="420"
-        Height="500"
+        Height="575"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         UseLayoutRounding="True"
@@ -115,6 +115,11 @@
                 <Button Content="💰 New Sale"
         Style="{StaticResource MainMenuButtonStyle}"
         Click="OpenSalesEntry_Click"/>
+
+                <Button Content="📊 Sales Dashboard"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="OpenSalesDashboard_Click"/>
+
 
                 <Button Content="Exit"
         Style="{StaticResource MainMenuButtonStyle}"

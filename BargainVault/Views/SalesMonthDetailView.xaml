@@ -1,0 +1,89 @@
+﻿<Window x:Class="BargainVault.Views.SalesMonthDetailView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Sales Details"
+        Width="900"
+        Height="480"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="📋 Monthly Sales Details"
+                   FontSize="16"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,10"/>
+
+        <!-- DataGrid -->
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding Sales}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="Column">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date"
+                                    Binding="{Binding DateSold, StringFormat=d}"
+                                    Width="120"/>
+
+                <DataGridTextColumn Header="Item"
+                                    Binding="{Binding ItemTitle}"
+                                    Width="*"/>
+
+                <DataGridTextColumn Header="Qty"
+                                    Binding="{Binding QtySold}"
+                                    Width="80"/>
+
+                <DataGridTextColumn Header="Unit Price"
+                                    Binding="{Binding UnitSalePrice, StringFormat=C}"
+                                    Width="120"/>
+
+                <DataGridTextColumn Header="Line Total"
+                                    Binding="{Binding LineTotal, StringFormat=C}"
+                                    Width="120"/>
+
+                <DataGridTextColumn Header="Booth"
+                                    Binding="{Binding BoothName}"
+                                    Width="140"/>
+
+                <DataGridTextColumn Header="Channel"
+                                    Binding="{Binding ChannelType}"
+                                    Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Totals + Close -->
+        <Grid Grid.Row="2" Margin="0,12,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="160"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Totals Labels -->
+            <TextBlock Grid.Column="1"
+                       Text="{Binding TotalUnitPrice, StringFormat=Total: {0:C}}"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"/>
+
+            <TextBlock Grid.Column="2"
+                       Text="{Binding TotalLineTotal, StringFormat=Total: {0:C}}"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"/>
+
+            <!-- Close Button -->
+            <Button Grid.Column="3"
+                    Content="Close"
+                    Width="100"
+                    Margin="12,0,0,0"
+                    IsCancel="True"
+                    Click="Close"/>
+        </Grid>
+    </Grid>
+</Window>
