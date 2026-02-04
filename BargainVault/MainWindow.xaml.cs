@@ -1,4 +1,5 @@
-﻿using BargainVault.Domain.Services;
+﻿using BargainVault.Domain.Models;
+using BargainVault.Domain.Services;
 using BargainVault.Views;
 using BargainVault.Views.Acquisitions;
 using BargainVault.Views.Items;
@@ -106,6 +107,61 @@ namespace BargainVault
         private void OpenSalesDashboard_Click(object sender, RoutedEventArgs e)
         {
             var view = App.Services.GetRequiredService<SalesDashboardView>();
+            view.Owner = this;
+            view.ShowDialog();
+        }
+
+        // 🧪 Step 4: Quick Service Sanity Test 
+        private async void TestFacebookPostInsert_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var service = App.Services.GetRequiredService<IFacebookPostsService>();
+
+                var newId = await service.InsertFacebookPostAsync(
+                    new FacebookPostDto
+                    {
+                        AcqId = 1, // must exist
+                        PostDate = DateTime.Now,
+                        PostTitle = "Test Facebook Post",
+                        PostDescription = "Sanity test insert",
+                        AskingPrice = 49.99m,
+                        Boosted = false,
+                        MarkAsSold = false
+                    },
+                    Environment.UserName);
+
+                MessageBox.Show($"Inserted Facebook Post ID: {newId}",
+                                "Success",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message,
+                                "Insert Failed",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Error);
+            }
+        }
+
+        private void OpenFacebookPostInsert_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<FacebookPostsEntryView>();
+            view.Owner = this;
+            view.ShowDialog();
+        }
+
+        private void OpenFacebookPostsList_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<FacebookPostsListView>();
+            view.Owner = this;
+            view.ShowDialog();
+        }
+
+        private void NewInventoryItem_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<InventoryLocationsEntryView>();
             view.Owner = this;
             view.ShowDialog();
         }

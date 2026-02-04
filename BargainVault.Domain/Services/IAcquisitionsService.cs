@@ -26,6 +26,7 @@ namespace BargainVault.Domain.Services
         Task<IList<AcquisitionListDto>> GetAcquisitionsAsync();
         Task<AcquisitionDto> GetAcquisitionByIdAsync(int acqId);
         Task UpdateAcquisitionAsync(AcquisitionDto acquisition);
+        Task<List<AcquisitionLookupDto>> GetAcquisitionLookupAsync();
 
     }
 }

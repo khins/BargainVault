@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="BargainVault"
         Width="420"
-        Height="575"
+        Height="775"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         UseLayoutRounding="True"
@@ -120,10 +120,22 @@
         Style="{StaticResource MainMenuButtonStyle}"
         Click="OpenSalesDashboard_Click"/>
 
+                <Button Content="📘New Facebook Entry"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="OpenFacebookPostInsert_Click"/>
+
+                <Button Content="📘 Facebook Posts"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="OpenFacebookPostsList_Click"/>
+
+                <Button Content="➕ New inventory placement"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="NewInventoryItem_Click"/>
 
                 <Button Content="Exit"
         Style="{StaticResource MainMenuButtonStyle}"
         Click="Exit_Click"/>
+
 
 
 

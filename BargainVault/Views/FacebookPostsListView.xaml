@@ -1,0 +1,80 @@
+﻿<Window x:Class="BargainVault.Views.FacebookPostsListView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Facebook Posts"
+        Width="900"
+        Height="500"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Search -->
+        <StackPanel Orientation="Horizontal"
+                    Margin="0,0,0,8">
+            <TextBlock Text="🔍 Search:"
+                       VerticalAlignment="Center"
+                       Margin="0,0,6,0"/>
+            <TextBox Width="260"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+
+        <!-- Grid -->
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding PostsView}"
+                  SelectedItem="{Binding SelectedPost}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  MouseDoubleClick="EditSelected_Click">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Post ID"
+                                    Binding="{Binding PostId}"
+                                    Width="80"/>
+                <DataGridTextColumn Header="Item"
+                                    Binding="{Binding ItemTitle}"
+                                    Width="*"/>
+                <DataGridTextColumn Header="Post Date"
+                                    Binding="{Binding PostDate, StringFormat=d}"
+                                    Width="120"/>
+                <DataGridTextColumn Header="Price"
+                                    Binding="{Binding AskingPrice, StringFormat=C}"
+                                    Width="120"/>
+                <DataGridCheckBoxColumn Header="Boosted"
+                                        Binding="{Binding Boosted}"
+                                        Width="90"/>
+                <DataGridCheckBoxColumn Header="Sold"
+                                        Binding="{Binding MarkAsSold}"
+                                        Width="80"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,10,0,0">
+
+            <Button Content="✏️ Edit"
+                    Width="100"
+                    Margin="4"
+                    IsEnabled="{Binding HasSelection}"
+                    Click="EditSelected_Click"/>
+
+            <Button Content="🗑 Delete"
+                    Width="100"
+                    Margin="4"
+                    IsEnabled="{Binding HasSelection}"
+                    Click="DeleteSelected_Click"/>
+
+            <Button Content="Close"
+                    Width="100"
+                    Margin="4"
+                    IsCancel="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

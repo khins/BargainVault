@@ -1,0 +1,156 @@
+﻿<Window x:Class="BargainVault.Views.FacebookPostsEntryView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Facebook Post Entry"
+        Width="650"
+        Height="520"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="📘 Facebook Post Entry"
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,12"/>
+
+        <!-- Form -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Acquisition -->
+            <TextBlock Grid.Row="0"
+                       Grid.Column="0"
+                       Text="Acquisition:"
+                       VerticalAlignment="Center"
+                       Margin="0,4"/>
+
+            <ComboBox Grid.Row="0"
+                      Grid.Column="1"
+                      ItemsSource="{Binding Acquisitions}"
+                      DisplayMemberPath="DisplayText"
+                      SelectedValuePath="AcqId"
+                      SelectedValue="{Binding SelectedAcqId, Mode=TwoWay}"
+                      IsEditable="True"
+                      IsTextSearchEnabled="True"
+                      Margin="0,4"/>
+
+            <!-- Post Date -->
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="Post Date:"
+                       VerticalAlignment="Center"
+                       Margin="0,4"/>
+
+            <DatePicker Grid.Row="1"
+                        Grid.Column="1"
+                        SelectedDate="{Binding PostDate}"
+                        Margin="0,4"/>
+
+            <!-- Title -->
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Title:"
+                       VerticalAlignment="Center"
+                       Margin="0,4"/>
+
+            <TextBox Grid.Row="2"
+                     Grid.Column="1"
+                     Text="{Binding PostTitle}"
+                     Margin="0,4"/>
+
+            <!-- Asking Price -->
+            <TextBlock Grid.Row="3"
+                       Grid.Column="0"
+                       Text="Asking Price:"
+                       VerticalAlignment="Center"
+                       Margin="0,4"/>
+
+            <TextBox Grid.Row="3"
+                     Grid.Column="1"
+                     Text="{Binding AskingPrice}"
+                     Margin="0,4"/>
+
+            <!-- Boosted -->
+            <CheckBox Grid.Row="4"
+                      Grid.Column="1"
+                      Content="Boosted Post"
+                      IsChecked="{Binding Boosted}"
+                      Margin="0,4"/>
+
+            <!-- Mark As Sold -->
+            <CheckBox Grid.Row="5"
+                      Grid.Column="1"
+                      Content="Mark as Sold"
+                      IsChecked="{Binding MarkAsSold}"
+                      Margin="0,4"/>
+
+            <!-- Renew Date -->
+            <TextBlock Grid.Row="6"
+                       Grid.Column="0"
+                       Text="Renew Date:"
+                       VerticalAlignment="Center"
+                       Margin="0,4"/>
+
+            <DatePicker Grid.Row="6"
+                        Grid.Column="1"
+                        SelectedDate="{Binding RenewDate}"
+                        Margin="0,4"/>
+
+            <!-- Description -->
+            <TextBlock Grid.Row="7"
+                       Grid.Column="0"
+                       Text="Description:"
+                       VerticalAlignment="Top"
+                       Margin="0,4"/>
+
+            <TextBox Grid.Row="7"
+                     Grid.Column="1"
+                     Text="{Binding PostDescription}"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     Height="120"
+                     Margin="0,4"/>
+        </Grid>
+
+        <!-- Footer Buttons -->
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,14,0,0">
+
+            <Button Content="💾 Save"
+                    Width="100"
+                    Margin="6,0"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsDirty}"/>
+
+            <Button Content="Close"
+                    Width="100"
+                    Margin="6,0"
+                    IsCancel="True"
+                    Click="Close"/>
+        </StackPanel>
+    </Grid>
+</Window>

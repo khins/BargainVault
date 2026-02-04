@@ -64,7 +64,18 @@ namespace BargainVault
 
             //Booth service
             services.AddScoped<IBoothsService, BoothsService>();
-
+            //facebook
+            services.AddScoped<IAcquisitionsService, AcquisitionsService>();
+            services.AddScoped<IFacebookPostsService, FacebookPostsService>();
+            services.AddTransient<FacebookPostsEntryViewModel>();
+            services.AddTransient<FacebookPostsEntryView>();
+            services.AddTransient<FacebookPostsListViewModel>();
+            services.AddTransient<FacebookPostsListView>();
+            //inventory location
+            services.AddScoped<ILookupsService, LookupsService>();
+            services.AddScoped<IInventoryLocationsService, InventoryLocationsService>();
+            services.AddTransient<InventoryLocationsEntryViewModel>();
+            services.AddTransient<InventoryLocationsEntryView>();
 
             // Views / ViewModels
             services.AddSingleton<MainWindow>();

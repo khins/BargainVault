@@ -218,6 +218,38 @@ namespace BargainVault.Domain.Services
             };
         }
 
+        public async Task<List<AcquisitionLookupDto>> GetAcquisitionLookupAsync()
+        {
+            var results = new List<AcquisitionLookupDto>();
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            const string sql = @"
+                    SELECT
+                        a.acq_id,
+                        i.title || ' (#' || a.acq_id || ')' AS display_text
+                    FROM acquisitions a
+                    JOIN items i ON i.item_id = a.item_id
+                    ORDER BY i.title;
+                ";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                results.Add(new AcquisitionLookupDto
+                {
+                    AcqId = reader.GetInt32(0),
+                    DisplayText = reader.GetString(1)
+                });
+            }
+
+            return results;
+        }
+
+
 
     }
 }
