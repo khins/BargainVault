@@ -188,6 +188,24 @@ namespace BargainVault.Domain.Services
                 Notes = reader.IsDBNull(6) ? null : reader.GetString(6)
             };
         }
+
+        public async Task DeleteInventoryLocationByItemIdAsync(
+                int itemId,
+                string enteredBy)
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            await using var cmd = new NpgsqlCommand(
+                "SELECT public.delete_inventory_location_by_item(@item_id, @entered_by)",
+                conn);
+
+            cmd.Parameters.AddWithValue("item_id", itemId);
+            cmd.Parameters.AddWithValue("entered_by", enteredBy);
+
+            await cmd.ExecuteNonQueryAsync();
+        }
+
     }
 
 

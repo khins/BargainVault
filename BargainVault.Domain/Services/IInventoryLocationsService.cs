@@ -23,6 +23,11 @@ namespace BargainVault.Domain.Services
 
         Task<InventoryLocationDto?> GetInventoryLocationByIdAsync(
             int inventoryLocationId);
+
+        Task DeleteInventoryLocationByItemIdAsync(
+            int itemId,
+            string enteredBy);
+
     }
 
 

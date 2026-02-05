@@ -8,9 +8,12 @@ namespace BargainVault.Domain.Services
     public class SalesService : ISalesService
     {
         private readonly string _connectionString;
+        private readonly IInventoryLocationsService _inventoryLocationsService;
 
-        public SalesService()
+
+        public SalesService(IInventoryLocationsService inventoryLocationsService)
         {
+            _inventoryLocationsService = inventoryLocationsService;
             _connectionString = ConfigurationManager
                 .ConnectionStrings["BargainVault"]
                 ?.ConnectionString
@@ -22,20 +25,39 @@ namespace BargainVault.Domain.Services
             await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            await using var cmd = new NpgsqlCommand(
+            await using var tx = await conn.BeginTransactionAsync();
+
+            try
+            {
+                // 1️⃣ Insert sale
+                await using var cmd = new NpgsqlCommand(
                 "SELECT public.insert_sale(@item_id, @date_sold, @qty_sold, @channel_type, @booth_id, @unit_sale_price, @discounted_rate, @entered_by)",
                 conn);
 
-            cmd.Parameters.AddWithValue("item_id", dto.ItemId);
-            cmd.Parameters.AddWithValue("date_sold", dto.DateSold);
-            cmd.Parameters.AddWithValue("qty_sold", dto.QtySold);
-            cmd.Parameters.AddWithValue("channel_type", (object?)dto.ChannelType ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("booth_id", (object?)dto.BoothId ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("unit_sale_price", dto.UnitSalePrice);
-            cmd.Parameters.AddWithValue("discounted_rate", (object?)dto.DiscountedRate ?? DBNull.Value);
-            cmd.Parameters.AddWithValue("entered_by", enteredBy);
+                cmd.Parameters.AddWithValue("item_id", dto.ItemId);
+                cmd.Parameters.AddWithValue("date_sold", dto.DateSold);
+                cmd.Parameters.AddWithValue("qty_sold", dto.QtySold);
+                cmd.Parameters.AddWithValue("channel_type", (object?)dto.ChannelType ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("booth_id", (object?)dto.BoothId ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("unit_sale_price", dto.UnitSalePrice);
+                cmd.Parameters.AddWithValue("discounted_rate", (object?)dto.DiscountedRate ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("entered_by", enteredBy);
 
-            return (int)(await cmd.ExecuteScalarAsync())!;
+                // 2️⃣ Remove inventory
+                await _inventoryLocationsService
+                    .DeleteInventoryLocationByItemIdAsync(
+                        dto.ItemId,
+                        enteredBy);
+
+                await tx.CommitAsync();
+
+                return (int)(await cmd.ExecuteScalarAsync())!;
+            }
+            catch 
+            {
+                await tx.RollbackAsync();
+                throw;
+            }            
         }
 
         public async Task UpdateSaleAsync(SaleDto dto, string enteredBy)
