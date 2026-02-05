@@ -76,6 +76,10 @@ namespace BargainVault
             services.AddScoped<IInventoryLocationsService, InventoryLocationsService>();
             services.AddTransient<InventoryLocationsEntryViewModel>();
             services.AddTransient<InventoryLocationsEntryView>();
+            services.AddTransient<InventoryLocationsListViewModel>();
+            services.AddTransient<InventoryLocationsListView>();
+            services.AddTransient<InventoryLocationsEntryView>();
+
 
             // Views / ViewModels
             services.AddSingleton<MainWindow>();

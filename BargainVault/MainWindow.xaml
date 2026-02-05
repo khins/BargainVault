@@ -131,6 +131,9 @@
                 <Button Content="➕ New inventory placement"
         Style="{StaticResource MainMenuButtonStyle}"
         Click="NewInventoryItem_Click"/>
+                <Button Content="✏️ Inventory Lists"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="InventoryLists_Click"/>
 
                 <Button Content="Exit"
         Style="{StaticResource MainMenuButtonStyle}"

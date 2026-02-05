@@ -3,8 +3,69 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Inventory Location Entry"
         Height="520"
-        Width="620"
+        Width="750"
         WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+
+        <Style x:Key="MainMenuButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="220"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Margin" Value="6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="#E0E0E0"/>
+            <Setter Property="BorderBrush" Value="#707070"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="Black"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                        x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="6">
+
+                            <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True"/>
+                        </Border>
+
+                        <!-- Visual states -->
+                        <ControlTemplate.Triggers>
+
+                            <!-- Hover -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border"
+                                    Property="Background"
+                                    Value="#D6D6D6"/>
+                            </Trigger>
+
+                            <!-- Pressed -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border"
+                                    Property="Background"
+                                    Value="#C8C8C8"/>
+                            </Trigger>
+
+                            <!-- Disabled -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border"
+                                    Property="Background"
+                                    Value="#EEEEEE"/>
+                                <Setter Property="Foreground"
+                                    Value="#888888"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
 
     <Grid Margin="16">
         <Grid.RowDefinitions>
@@ -38,12 +99,7 @@
                       SelectedValue="{Binding SelectedItemId}"
                       Margin="4"/>
 
-            <!-- Channel -->
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Channel Type:" VerticalAlignment="Center"/>
-            <ComboBox Grid.Row="1" Grid.Column="1"
-                      ItemsSource="{Binding ChannelTypes}"
-                      SelectedItem="{Binding SelectedChannelType}"
-                      Margin="4"/>
+
 
             <!-- Status -->
             <TextBlock Grid.Row="2" Grid.Column="0" Text="Status:" VerticalAlignment="Center"/>
@@ -75,12 +131,7 @@
                      TextWrapping="Wrap"
                      Margin="4"/>
 
-            <!-- Created -->
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="Created_at:" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="6" Grid.Column="1"
-                     Text="{Binding CreatedAt}"
-                     IsReadOnly="True"
-                     Margin="4"/>
+
         </Grid>
 
         <!-- BUTTONS -->
@@ -90,21 +141,17 @@
                     Margin="0,12,0,0">
 
             <Button Content="💾 Save"
-                    Width="100"
-                    Margin="6,0"
                     Command="{Binding SaveCommand}"
-                    IsEnabled="{Binding IsDirty}"/>
-                    
+                    IsEnabled="{Binding IsDirty}"
+                    Style="{StaticResource MainMenuButtonStyle}"/>                    
 
             <Button Content="New Entry"
-                    Width="110"
-                    Margin="6,0"
-                    Command="{Binding NewCommand}"/>
+                    Command="{Binding NewCommand}"
+                    Style="{StaticResource MainMenuButtonStyle}"/>
 
             <Button Content="Close"
-                    Width="110"
-                    Margin="6,0"
-                    Click="Close_Click"/>
+                    Click="Close_Click"
+                    Style="{StaticResource MainMenuButtonStyle}"/>
         </StackPanel>
     </Grid>
 </Window>

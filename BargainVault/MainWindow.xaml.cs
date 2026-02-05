@@ -165,5 +165,12 @@ namespace BargainVault
             view.Owner = this;
             view.ShowDialog();
         }
+
+        private void InventoryLists_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<InventoryLocationsListView>();
+            view.Owner = this;
+            view.ShowDialog();
+        }
     }
 }

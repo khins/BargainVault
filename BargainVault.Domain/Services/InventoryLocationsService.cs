@@ -114,19 +114,20 @@ namespace BargainVault.Domain.Services
             await conn.OpenAsync();
 
             const string sql = @"
-            SELECT
-                il.inventory_location_id,
-                i.item_id,
-                i.title,
-                b.booth_name,
-                s.name AS status_name,
-                il.date_placed,
-                il.asking_price
-            FROM inventory_locations il
-            JOIN items i ON i.item_id = il.item_id
-            LEFT JOIN booths b ON b.booth_id = il.booth_id
-            LEFT JOIN acquisition_status s ON s.status_id = il.status_id
-            ORDER BY il.inventory_location_id DESC;
+                SELECT
+                    il.inventory_location_id,
+                    i.item_id,
+                    i.title,
+                    b.booth_name,
+                   s.status_name,
+                    il.date_placed,
+                    il.asking_price,
+                    il.created_at
+                FROM inventory_locations il
+                JOIN items i ON i.item_id = il.item_id
+                LEFT JOIN booths b ON b.booth_id = il.booth_id
+                LEFT JOIN inventory_status s ON s.status_id = il.status_id
+                ORDER BY il.inventory_location_id DESC;
         ";
 
             await using var cmd = new NpgsqlCommand(sql, conn);
@@ -163,10 +164,11 @@ namespace BargainVault.Domain.Services
                 status_id,
                 date_placed,
                 asking_price,
-                notes
+                notes,
+                created_at
             FROM inventory_locations
             WHERE inventory_location_id = @id;
-        ";
+             ";
 
             await using var cmd = new NpgsqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("id", inventoryLocationId);

@@ -13,5 +13,7 @@ namespace BargainVault.Domain.Models
         public DateTime? DatePlaced { get; set; }
         public decimal? AskingPrice { get; set; }
         public string? Notes { get; set; }
+        public DateTime? CreatedAt { get; set; }
+
     }
 }

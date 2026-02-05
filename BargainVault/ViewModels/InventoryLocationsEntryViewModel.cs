@@ -12,14 +12,14 @@ namespace BargainVault.ViewModels
         private readonly IInventoryLocationsService _inventoryService;
         private readonly IItemsService _itemsService;
         private readonly ILookupsService _lookupsService;
+        private readonly InventoryLocationDto? _editDto;
+
 
         private int? _inventoryLocationId;
 
         public ObservableCollection<ItemDto> Items { get; } = new();
         public ObservableCollection<LookupDto> Booths { get; } = new();
         public ObservableCollection<LookupDto> Statuses { get; } = new();
-        public ObservableCollection<string> ChannelTypes { get; }
-                = new ObservableCollection<string>();
 
         public RelayCommand SaveCommand { get; }
         public RelayCommand NewCommand { get; }
@@ -57,8 +57,10 @@ namespace BargainVault.ViewModels
             DatePlaced = dto.DatePlaced;
             AskingPrice = dto.AskingPrice;
             Notes = dto.Notes;
+            CreatedAt = dto.CreatedAt;
 
             IsDirty = false;
+            _editDto = dto;
         }
 
         // ──────────────────────────────
@@ -79,7 +81,13 @@ namespace BargainVault.ViewModels
         }
 
         public string? SelectedChannelType { get; set; }
-        public DateTime? CreatedAt { get; set; }
+        private DateTime? _createdAt;
+        public DateTime? CreatedAt
+        {
+            get => _createdAt;
+            set => SetProperty(ref _createdAt, value);
+        }
+
 
         private int? _selectedStatusId;
         public int? SelectedStatusId
@@ -218,18 +226,28 @@ namespace BargainVault.ViewModels
             foreach (var s in statuses)
                 Statuses.Add(s);
 
-            ChannelTypes.Clear();
-            ChannelTypes.Add("In Booth");
-            ChannelTypes.Add("Home Inventory");
-            ChannelTypes.Add("Storage");
-
-            MessageBox.Show($"ChannelTypes count: {ChannelTypes.Count}");
+            //MessageBox.Show($"ChannelTypes count: {ChannelTypes.Count}");
 
             Statuses.Clear();
             foreach (var status in await _lookupsService.GetInventoryStatusesAsync())
                 Statuses.Add(status);
 
-            MessageBox.Show($"Statuses count: {Statuses.Count}");
+            //MessageBox.Show($"Statuses count: {Statuses.Count}");
+            // 🔑 APPLY EDIT VALUES AFTER LOOKUPS
+            if (_editDto != null)
+            {
+                _inventoryLocationId = _editDto.InventoryLocationId;
+                SelectedItemId = _editDto.ItemId;
+                SelectedBoothId = _editDto.BoothId;
+                SelectedStatusId = _editDto.StatusId;
+                DatePlaced = _editDto.DatePlaced;
+                AskingPrice = _editDto.AskingPrice;
+                Notes = _editDto.Notes;
+                CreatedAt = _editDto.CreatedAt;
+
+                IsDirty = false;
+                SaveCommand.RaiseCanExecuteChanged();
+            }
         }
 
         private void NewEntry()
