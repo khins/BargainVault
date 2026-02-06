@@ -79,8 +79,11 @@ namespace BargainVault
             services.AddTransient<InventoryLocationsListViewModel>();
             services.AddTransient<InventoryLocationsListView>();
             services.AddTransient<InventoryLocationsEntryView>();
-
-
+            //Report services
+            services.AddScoped<IReportsService, ReportsService>();
+            services.AddTransient<AuctionProfitReportView>();
+            services.AddTransient<AuctionProfitReportViewModel>();
+            
             // Views / ViewModels
             services.AddSingleton<MainWindow>();
         }

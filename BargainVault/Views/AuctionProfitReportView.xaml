@@ -1,0 +1,160 @@
+﻿<Window x:Class="BargainVault.Views.AuctionProfitReportView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Auction Profit Analysis"
+        Height="540"
+        Width="920"
+        WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+
+        <Style x:Key="MainMenuButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Margin" Value="6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="#E0E0E0"/>
+            <Setter Property="BorderBrush" Value="#707070"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="Black"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                 x:Name="border"
+                 Background="{TemplateBinding Background}"
+                 BorderBrush="{TemplateBinding BorderBrush}"
+                 BorderThickness="{TemplateBinding BorderThickness}"
+                 CornerRadius="6">
+
+                            <ContentPresenter
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     RecognizesAccessKey="True"/>
+                        </Border>
+
+                        <!-- Visual states -->
+                        <ControlTemplate.Triggers>
+
+                            <!-- Hover -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border"
+                             Property="Background"
+                             Value="#D6D6D6"/>
+                            </Trigger>
+
+                            <!-- Pressed -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border"
+                             Property="Background"
+                             Value="#C8C8C8"/>
+                            </Trigger>
+
+                            <!-- Disabled -->
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border"
+                             Property="Background"
+                             Value="#EEEEEE"/>
+                                <Setter Property="Foreground"
+                             Value="#888888"/>
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <!-- Header -->
+            <RowDefinition Height="Auto"/>
+
+            <!-- Search -->
+            <RowDefinition Height="Auto"/>
+
+            <!-- DataGrid -->
+            <RowDefinition Height="*"/>
+
+            <!-- Footer -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ================= HEADER ================= -->
+        <TextBlock Grid.Row="0"
+                   Text="📊 Auction Profit Analysis"
+                   FontSize="18"
+                   FontWeight="Bold"
+                   Margin="0,0,0,10"/>
+
+        <!-- ================= SEARCH ================= -->
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    Margin="0,0,0,8">
+            <TextBlock Text="🔍 Search:"
+                       VerticalAlignment="Center"
+                       Margin="0,0,6,0"/>
+
+            <TextBox Width="280"
+                     Height="24"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     ToolTip="Search by title, auction site, or lot number"/>
+        </StackPanel>
+
+        <!-- ================= GRID ================= -->
+        <DataGrid Grid.Row="2"
+                  ItemsSource="{Binding ItemsView}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal"
+                  RowHeight="28"
+                  AlternatingRowBackground="#FFF6F6F6"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto"
+                  VirtualizingPanel.IsVirtualizing="True"
+                  VirtualizingPanel.VirtualizationMode="Recycling">
+
+            <DataGrid.Columns>
+
+                <DataGridTextColumn Header="Title"
+                                    Binding="{Binding Title}"
+                                    Width="2.5*"/>
+
+                <DataGridTextColumn Header="Lot"
+                                    Binding="{Binding LotNumber}"
+                                    Width="80"/>
+
+                <DataGridTextColumn Header="Auction Site"
+                                    Binding="{Binding AuctionSite}"
+                                    Width="*"/>
+
+                <DataGridTextColumn Header="Settlement"
+                                    Binding="{Binding TotalSettlement, StringFormat=C}"
+                                    Width="110"/>
+
+                <DataGridTextColumn Header="Suggested Booth"
+                                    Binding="{Binding SuggestedBoothPrice, StringFormat=C}"
+                                    Width="140"/>
+
+                <DataGridTextColumn Header="Potential Profit"
+                                    Binding="{Binding PotentialProfit, StringFormat=C}"
+                                    Width="140"/>
+
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- ================= FOOTER ================= -->
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,10,0,0">
+            <Button Content="Close"
+Style="{StaticResource MainMenuButtonStyle}"
+                    Click="Close_Click"/>
+        </StackPanel>
+
+    </Grid>
+</Window>

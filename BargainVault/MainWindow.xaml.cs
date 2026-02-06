@@ -172,5 +172,12 @@ namespace BargainVault
             view.Owner = this;
             view.ShowDialog();
         }
+
+        private void OpenAuctionProfitReport_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<AuctionProfitReportView>();
+            view.Owner = this;
+            view.ShowDialog();
+        }
     }
 }

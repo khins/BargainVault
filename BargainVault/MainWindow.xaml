@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="BargainVault"
         Width="420"
-        Height="775"
+        Height="875"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         UseLayoutRounding="True"
@@ -70,7 +70,7 @@
         </Style>
 
     </Window.Resources>
-
+    
     <Grid>
         <Border Padding="20"
                 CornerRadius="6"
@@ -111,6 +111,10 @@
                 <Button Content="Acquisitions List"
         Style="{StaticResource MainMenuButtonStyle}"
         Click="OpenAcquisitionsList_Click"/>
+
+                <Button Content="Auction Profit Report"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="OpenAuctionProfitReport_Click"/>
 
                 <Button Content="💰 New Sale"
         Style="{StaticResource MainMenuButtonStyle}"
