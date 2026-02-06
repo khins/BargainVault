@@ -9,15 +9,18 @@ namespace BargainVault.Domain.Services
     {
         private readonly string _connectionString;
         private readonly IInventoryLocationsService _inventoryLocationsService;
+        private readonly IFacebookPostsService _facebookPostsService;
 
 
-        public SalesService(IInventoryLocationsService inventoryLocationsService)
+        public SalesService(IInventoryLocationsService inventoryLocationsService, IFacebookPostsService facebookPostsService)
         {
             _inventoryLocationsService = inventoryLocationsService;
+            _facebookPostsService = facebookPostsService;
             _connectionString = ConfigurationManager
                 .ConnectionStrings["BargainVault"]
                 ?.ConnectionString
                 ?? throw new InvalidOperationException("Connection string 'BargainVault' not found.");
+            _facebookPostsService = facebookPostsService;
         }
 
         public async Task<int> InsertSaleAsync(SaleDto dto, string enteredBy)
@@ -48,6 +51,11 @@ namespace BargainVault.Domain.Services
                     .DeleteInventoryLocationByItemIdAsync(
                         dto.ItemId,
                         enteredBy);
+
+
+                // After sale insert + inventory delete
+                await _facebookPostsService
+                    .MarkPostsSoldByItemAsync(dto.ItemId, enteredBy);
 
                 await tx.CommitAsync();
 

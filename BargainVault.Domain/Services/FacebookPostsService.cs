@@ -162,6 +162,23 @@ namespace BargainVault.Domain.Services
         }
 
 
+        public async Task<int> MarkPostsSoldByItemAsync(int itemId, string enteredBy)
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            await using var cmd = new NpgsqlCommand(
+                "SELECT public.mark_facebook_posts_sold_by_item(@item_id, @entered_by)",
+                conn);
+
+            cmd.Parameters.AddWithValue("item_id", itemId);
+            cmd.Parameters.AddWithValue("entered_by", enteredBy);
+
+            return (int)(await cmd.ExecuteScalarAsync())!;
+        }
+
+
+
     }
 
 }
