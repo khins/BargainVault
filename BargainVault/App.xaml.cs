@@ -83,7 +83,14 @@ namespace BargainVault
             services.AddScoped<IReportsService, ReportsService>();
             services.AddTransient<AuctionProfitReportView>();
             services.AddTransient<AuctionProfitReportViewModel>();
-            
+
+            //global search
+            services.AddSingleton<IGlobalSearchService, GlobalSearchService>();            
+            services.AddTransient<GlobalSearchView>();            
+            services.AddTransient<GlobalSearchViewModel>();
+            services.AddScoped<ILookupsService, LookupsService>();
+
+
             // Views / ViewModels
             services.AddSingleton<MainWindow>();
         }

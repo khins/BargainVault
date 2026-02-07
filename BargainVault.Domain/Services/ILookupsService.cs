@@ -9,6 +9,9 @@ namespace BargainVault.Domain.Services
     {
         Task<List<LookupDto>> GetBoothsAsync();
         Task<List<LookupDto>> GetInventoryStatusesAsync();
+        Task<List<LookupDto>> GetAuctionSitesAsync();
+
+        Task<List<LookupDto>> GetAcquisitionStatusesAsync();
     }
 
 }

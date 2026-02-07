@@ -61,6 +61,7 @@ namespace BargainVault.Views
 
             await vm.DeleteSelectedAsync();
         }
+
     }
 
 }

@@ -28,5 +28,7 @@ namespace BargainVault.Domain.Services
             int quantity,
             string enteredBy
         );
+
+        Task<ItemDto> GetItemByIdAsync(int itemId);
     }
 }

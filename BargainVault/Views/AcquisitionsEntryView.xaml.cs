@@ -23,5 +23,14 @@ namespace BargainVault.Views
             InitializeComponent();
             DataContext = viewModel;
         }
+
+        public void LoadAcquisition(int acqId)
+        {
+            if (DataContext is AcquisitionsEntryViewModel vm)
+            {
+                _ = vm.LoadAsync(acqId);
+            }
+        }
+
     }
 }

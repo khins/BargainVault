@@ -82,6 +82,15 @@
                        Margin="0,0,6,0"/>
             <TextBox Width="260"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBlock Text="Active Listings:"
+               VerticalAlignment="Center"
+               FontWeight="SemiBold"
+               Margin="10,0,4,0"/>
+
+            <TextBlock Text="{Binding ActiveCount}"
+               VerticalAlignment="Center"
+               FontWeight="Bold"/>
         </StackPanel>
 
         <!-- Grid -->

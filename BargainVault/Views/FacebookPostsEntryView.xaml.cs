@@ -28,5 +28,14 @@ namespace BargainVault.Views
         {
             Close();
         }
+
+        public void LoadPost(int postId)
+        {
+            if (DataContext is FacebookPostsEntryViewModel vm)
+            {
+                _ = vm.LoadAsync(postId);
+            }
+        }
+
     }
 }

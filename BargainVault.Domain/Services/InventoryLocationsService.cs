@@ -127,7 +127,7 @@ namespace BargainVault.Domain.Services
                 JOIN items i ON i.item_id = il.item_id
                 LEFT JOIN booths b ON b.booth_id = il.booth_id
                 LEFT JOIN inventory_status s ON s.status_id = il.status_id
-                ORDER BY il.inventory_location_id DESC;
+                ORDER BY i.title;
         ";
 
             await using var cmd = new NpgsqlCommand(sql, conn);

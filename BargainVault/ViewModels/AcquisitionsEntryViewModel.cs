@@ -14,13 +14,17 @@ namespace BargainVault.ViewModels.Acquisitions
     {
         private readonly IAcquisitionsService _acquisitionsService;
         private readonly IItemsService _itemsService;
+        private readonly ILookupsService _lookupsService;
+
 
         public AcquisitionsEntryViewModel(
             IAcquisitionsService acquisitionsService,
-            IItemsService itemsService)
+            IItemsService itemsService,
+            ILookupsService lookupsService)
         {
             _acquisitionsService = acquisitionsService;
             _itemsService = itemsService;
+            _lookupsService = lookupsService;
 
             Items = new ObservableCollection<ItemDto>();
             AuctionSites = new ObservableCollection<LookupDto>();
@@ -31,13 +35,15 @@ namespace BargainVault.ViewModels.Acquisitions
             DateAcquired = DateTime.Today;
 
             _ = LoadLookupsAsync();
+            _lookupsService = lookupsService;
         }
 
         public AcquisitionsEntryViewModel(
             IAcquisitionsService acquisitionsService,
             IItemsService itemsService,
+            ILookupsService lookupsService,
             AcquisitionDto dto)
-            : this(acquisitionsService, itemsService)
+            : this(acquisitionsService, itemsService, lookupsService)
         {
             _acqId = dto.AcqId;
 
@@ -80,6 +86,17 @@ namespace BargainVault.ViewModels.Acquisitions
                 SaveCommand.RaiseCanExecuteChanged();
             }
         }
+
+        private int? _acqId;
+        public int? AcqId
+        {
+            get => _acqId;
+            set
+            {
+                SetProperty(ref _acqId, value);
+                SaveCommand.RaiseCanExecuteChanged();
+            }
+        }        
 
         private int? _selectedAuctionSiteId;
         public int? SelectedAuctionSiteId
@@ -176,8 +193,13 @@ namespace BargainVault.ViewModels.Acquisitions
             set => SetProperty(ref _isBusinessExpense, value);
         }
 
-        private int? _acqId;
-        public bool IsEditMode => _acqId.HasValue;
+        
+        private bool _isEditMode;
+        public bool IsEditMode
+        {
+            get => _isEditMode;
+            set => SetProperty(ref _isEditMode, value);
+        }
 
 
         // -------------------------
@@ -300,39 +322,42 @@ namespace BargainVault.ViewModels.Acquisitions
 
         private async Task LoadLookupsAsync()
         {
-            var items = await _itemsService.GetItemsAsync();
-            Items.Clear();
-            foreach (var item in items
-                .OrderBy(i => i.Title))   // ✅ SORT HERE
-            {
-                Items.Add(item);
-            }
-
-            // TEMP: hardcoded lookups (replace later with services)
             AuctionSites.Clear();
-            AuctionSites.Add(new LookupDto { Id = 1, Name = "Back Porch Auctions" });
-            AuctionSites.Add(new LookupDto { Id = 2, Name = "Lot 66 Auctions" });
-            AuctionSites.Add(new LookupDto { Id = 1, Name = "ATX Auctions Ozarks" });
-            AuctionSites.Add(new LookupDto { Id = 2, Name = "Knight Auction" });
-            AuctionSites.Add(new LookupDto { Id = 1, Name = "Dirla Bid" });
-            AuctionSites.Add(new LookupDto { Id = 2, Name = "None" });
-            AuctionSites.Add(new LookupDto { Id = 1, Name = "Outpost" });
-            AuctionSites.Add(new LookupDto { Id = 2, Name = "Emaries" });
-            AuctionSites.Add(new LookupDto { Id = 2, Name = "Justbid" });
-
             Statuses.Clear();
-            Statuses.Add(new LookupDto { Id = 1, Name = "Staged" });
-            Statuses.Add(new LookupDto { Id = 2, Name = "InBooth" });
-            Statuses.Add(new LookupDto { Id = 2, Name = "OnHold" });
-            Statuses.Add(new LookupDto { Id = 2, Name = "Sold" });  
-            Statuses.Add(new LookupDto { Id = 2, Name = "Personal" });
-            Statuses.Add(new LookupDto { Id = 2, Name = "Inventory" });
+
+            foreach (var site in await _lookupsService.GetAuctionSitesAsync())
+                AuctionSites.Add(site);
+
+            foreach (var status in await _lookupsService.GetAcquisitionStatusesAsync())
+                Statuses.Add(status);
         }
 
         public void RaiseCanExecuteChanged()
         {
             CommandManager.InvalidateRequerySuggested();
         }
+
+        public async Task LoadAsync(int acqId)
+        {
+            // 1️⃣ Load lookup data first
+            await LoadLookupsAsync();
+
+            // 2️⃣ Load acquisition
+            var dto = await _acquisitionsService.GetAcquisitionByIdAsync(acqId);
+
+            AcqId = dto.AcqId;
+            SelectedItemId = dto.ItemId;
+            DateAcquired = dto.DateAcquired;
+            UnitHammerPrice = dto.UnitHammerPrice;
+            BuyerPremium = dto.BuyerPremium;
+            SalesTaxPaid = dto.SalesTaxPaid;
+            TotalSettlement = dto.TotalSettlement;
+            IsPersonal = dto.Personal;
+            IsBusinessExpense = dto.BusinessExpense;
+
+            IsEditMode = true;
+        }
+
 
     }
 }

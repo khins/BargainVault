@@ -179,5 +179,13 @@ namespace BargainVault
             view.Owner = this;
             view.ShowDialog();
         }
+
+        private void OpenGlobalSearch_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<GlobalSearchView>();
+            view.Owner = this;
+            view.ShowDialog();
+        }
+
     }
 }

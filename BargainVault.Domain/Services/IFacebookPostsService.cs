@@ -15,6 +15,7 @@ namespace BargainVault.Domain.Services
         Task<List<FacebookPostListDto>> GetFacebookPostsAsync();
 
         Task<int> MarkPostsSoldByItemAsync(int itemId, string enteredBy);
+        Task<FacebookPostDto> GetPostByIdAsync(int postId);
 
     }
 

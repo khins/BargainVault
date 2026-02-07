@@ -8,6 +8,12 @@
         ResizeMode="NoResize"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True">
+    <Window.InputBindings>
+        <KeyBinding Key="K"
+                Modifiers="Control"
+                Command="{Binding OpenGlobalSearchCommand}"/>
+    </Window.InputBindings>
+
 
     <Window.Resources>
 
@@ -138,6 +144,10 @@
                 <Button Content="✏️ Inventory Lists"
         Style="{StaticResource MainMenuButtonStyle}"
         Click="InventoryLists_Click"/>
+
+                <Button Content="Global Search"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="OpenGlobalSearch_Click"/>
 
                 <Button Content="Exit"
         Style="{StaticResource MainMenuButtonStyle}"

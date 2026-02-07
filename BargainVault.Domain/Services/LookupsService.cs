@@ -19,6 +19,64 @@ namespace BargainVault.Domain.Services
                 ?? throw new InvalidOperationException("Connection string 'BargainVault' not found.");
         }
 
+        public async Task<List<LookupDto>> GetAcquisitionStatusesAsync()
+        {
+            const string sql = @"
+                    SELECT status_id, name
+                    FROM acquisition_status
+                    ORDER BY name;
+                ";
+
+            var results = new List<LookupDto>();
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                results.Add(new LookupDto
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1)
+                });
+            }
+
+            return results;
+        }
+
+
+        public async Task<List<LookupDto>> GetAuctionSitesAsync()
+        {
+            const string sql = @"
+                    SELECT auction_site_id, name
+                    FROM auction_sites
+                    ORDER BY name;
+                ";
+
+            var results = new List<LookupDto>();
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                results.Add(new LookupDto
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1)
+                });
+            }
+
+            return results;
+        }
+
+
         public async Task<List<LookupDto>> GetBoothsAsync()
         {
             var results = new List<LookupDto>();

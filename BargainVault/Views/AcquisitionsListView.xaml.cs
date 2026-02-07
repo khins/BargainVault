@@ -29,6 +29,9 @@ namespace BargainVault.Views.Acquisitions
             var itemsService =
                 App.Services.GetRequiredService<IItemsService>();
 
+            var lookupsService =
+                App.Services.GetRequiredService<ILookupsService>();
+
             var dto = await acquisitionsService
                 .GetAcquisitionByIdAsync(vm.SelectedAcquisition.AcqId);
 
@@ -38,6 +41,7 @@ namespace BargainVault.Views.Acquisitions
             var entryVm = new AcquisitionsEntryViewModel(
                 acquisitionsService,
                 itemsService,
+                lookupsService,
                 dto);
 
             var entryView = new AcquisitionsEntryView(entryVm)

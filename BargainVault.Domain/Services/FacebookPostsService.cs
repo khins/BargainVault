@@ -177,7 +177,47 @@ namespace BargainVault.Domain.Services
             return (int)(await cmd.ExecuteScalarAsync())!;
         }
 
+        public async Task<FacebookPostDto> GetPostByIdAsync(int postId)
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
 
+            await using var cmd = new NpgsqlCommand(
+                @"SELECT
+                      post_id,
+                      acq_id,
+                      post_date,
+                      post_title,
+                      post_description,
+                      asking_price,
+                      boosted,
+                      mark_as_sold,
+                      renew_date
+                  FROM facebook_posts
+                  WHERE post_id = @post_id;",
+                conn);
+
+            cmd.Parameters.AddWithValue("post_id", postId);
+
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            if (!await reader.ReadAsync())
+                throw new InvalidOperationException(
+                    $"Facebook post {postId} not found.");
+
+            return new FacebookPostDto
+            {
+                PostId = reader.GetInt32(0),
+                AcqId = reader.GetInt32(1),
+                PostDate = reader.IsDBNull(2) ? null : reader.GetDateTime(2),
+                PostTitle = reader.IsDBNull(3) ? null : reader.GetString(3),
+                PostDescription = reader.IsDBNull(4) ? null : reader.GetString(4),
+                AskingPrice = reader.IsDBNull(5) ? null : reader.GetDecimal(5),
+                Boosted = reader.IsDBNull(6) && false || reader.GetBoolean(6),
+                MarkAsSold = reader.IsDBNull(7) && false || reader.GetBoolean(7),
+                RenewDate = reader.IsDBNull(8) ? null : reader.GetDateTime(8)
+            };
+        }
 
     }
 

@@ -40,6 +40,12 @@ namespace BargainVault.ViewModels
             }
         }
 
+        public int ActiveCount =>
+                PostsView == null
+                    ? 0
+                    : PostsView.Cast<object>().Count();
+
+
         public bool HasSelection => SelectedPost != null;
 
         // 🔍 Search
@@ -51,6 +57,7 @@ namespace BargainVault.ViewModels
             {
                 SetProperty(ref _searchText, value);
                 PostsView?.Refresh();
+                OnPropertyChanged(nameof(ActiveCount));
             }
         }
 
@@ -66,6 +73,7 @@ namespace BargainVault.ViewModels
             PostsView.Filter = FilterPosts;
 
             OnPropertyChanged(nameof(PostsView));
+            OnPropertyChanged(nameof(ActiveCount));
         }
 
         private bool FilterPosts(object obj)

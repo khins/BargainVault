@@ -60,7 +60,12 @@ namespace BargainVault.ViewModels.Items
             CaptureOriginalValues();
         }
 
-        private bool IsEditMode { get; }
+        private bool _isEditMode;
+        public bool IsEditMode
+        {
+            get => _isEditMode;
+            private set => SetProperty(ref _isEditMode, value);
+        }
 
         private void CaptureOriginalValues()
         {
@@ -183,13 +188,27 @@ namespace BargainVault.ViewModels.Items
             OnPropertyChanged(string.Empty);
         }
 
-        private async Task LoadAsync()
+        public async Task LoadAsync()
         {
             Items.Clear();
             var items = await _itemsService.GetItemsAsync();
             foreach (var item in items)
                 Items.Add(item);
         }
+
+        public async Task LoadAsync(int itemId)
+        {
+            var dto = await _itemsService.GetItemByIdAsync(itemId);
+
+            ItemId = dto.ItemId;
+            LotNumber = dto.LotNumber;
+            Title = dto.Title;
+            Description = dto.Description;
+            CreatedAt = dto.CreatedAt;
+
+            IsEditMode = true;
+        }
+
 
         private void Close()
         {

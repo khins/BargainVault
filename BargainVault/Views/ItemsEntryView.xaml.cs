@@ -21,6 +21,15 @@ namespace BargainVault.Views.Items
             InitializeComponent();
             DataContext = viewModel;
         }
+
+        public void LoadItem(int itemId)
+        {
+            if (DataContext is ItemsEntryViewModel vm)
+            {
+                _ = vm.LoadAsync(itemId);
+            }
+        }
+
     }
 }
 

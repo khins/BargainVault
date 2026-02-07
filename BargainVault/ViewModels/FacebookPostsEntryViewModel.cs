@@ -14,8 +14,7 @@ namespace BargainVault.ViewModels
     {
         private readonly IFacebookPostsService _facebookService;
         private readonly IAcquisitionsService _acquisitionsService;
-
-        private int? _postId;
+           
 
         public ObservableCollection<AcquisitionLookupDto> Acquisitions { get; }
             = new();
@@ -68,6 +67,28 @@ namespace BargainVault.ViewModels
             set
             {
                 if (SetProperty(ref _selectedAcqId, value))
+                    MarkDirty();
+            }
+        }
+
+        private int _postId;
+        public int PostId
+        {
+            get => _postId;
+            set
+            {
+                if (SetProperty(ref _postId, value))
+                    MarkDirty();
+            }
+        }
+
+        private int _selectedAcquisitionId;
+        public int SelectedAcquisitionId
+        {
+            get => _selectedAcquisitionId;
+            set
+            {
+                if (SetProperty(ref _selectedAcquisitionId, value))
                     MarkDirty();
             }
         }
@@ -149,6 +170,13 @@ namespace BargainVault.ViewModels
             }
         }
 
+        private bool _isEditMode;
+        public bool IsEditMode
+        {
+            get => _isEditMode;
+            set => SetProperty(ref _isEditMode, value);
+        }
+
         // ──────────────────────────────
         // Dirty tracking
         // ──────────────────────────────
@@ -180,7 +208,7 @@ namespace BargainVault.ViewModels
         {
             var dto = new FacebookPostDto
             {
-                PostId = _postId ?? 0,
+                PostId = _postId,
                 AcqId = SelectedAcqId,
                 PostDate = PostDate,
                 PostTitle = PostTitle,
@@ -225,6 +253,24 @@ namespace BargainVault.ViewModels
             foreach (var row in results)
                 Acquisitions.Add(row);
         }
+
+        public async Task LoadAsync(int postId)
+        {
+            var dto = await _facebookService.GetPostByIdAsync(postId);
+
+            PostId = dto.PostId;
+            SelectedAcquisitionId = dto.AcqId;
+            PostDate = dto.PostDate;
+            PostTitle = dto.PostTitle;
+            PostDescription = dto.PostDescription;
+            AskingPrice = dto.AskingPrice;
+            Boosted = dto.Boosted;
+            MarkAsSold = dto.MarkAsSold;
+            RenewDate = dto.RenewDate;
+
+            IsEditMode = true;
+        }
+
     }
 
 }

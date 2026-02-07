@@ -62,7 +62,7 @@ namespace BargainVault.Domain.Services
             const string sql = @"
                     SELECT item_id, lot_number, title, description, created_at
                     FROM public.items
-                    ORDER BY created_at DESC;
+                    ORDER BY title ASC;
                 ";
 
             await using var cmd = new NpgsqlCommand(sql, conn);
@@ -119,6 +119,41 @@ namespace BargainVault.Domain.Services
 
             await cmd.ExecuteNonQueryAsync();
         }
+
+        public async Task<ItemDto> GetItemByIdAsync(int itemId)
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            await using var cmd = new NpgsqlCommand(
+                @"SELECT
+            item_id,
+            lot_number,
+            title,
+            description,
+            created_at
+          FROM items
+          WHERE item_id = @item_id;",
+                conn);
+
+            cmd.Parameters.AddWithValue("item_id", itemId);
+
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            if (!await reader.ReadAsync())
+                throw new InvalidOperationException(
+                    $"Item with ID {itemId} not found.");
+
+            return new ItemDto
+            {
+                ItemId = reader.GetInt32(0),
+                LotNumber = reader.GetInt32(1),
+                Title = reader.GetString(2),
+                Description = reader.IsDBNull(3) ? null : reader.GetString(3),
+                CreatedAt = reader.GetDateTime(4)
+            };
+        }
+
 
         public async Task<bool> TestConnectionAsync()
         {

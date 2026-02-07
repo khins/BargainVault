@@ -16,8 +16,8 @@ namespace BargainVault.Domain.Models
         public decimal? AskingPrice { get; set; }
         public bool Boosted { get; set; }
         public bool MarkAsSold { get; set; }
-
         public DateTime? RenewDate { get; set; }
+        public bool IsEditMode { get; set; }
     }
 
 }
