@@ -90,6 +90,11 @@ namespace BargainVault
             services.AddTransient<GlobalSearchViewModel>();
             services.AddScoped<ILookupsService, LookupsService>();
 
+            //retail prices
+            services.AddScoped<IRetailPricesService, RetailPricesService>();
+            services.AddScoped<IStoresService, StoresService>();
+            services.AddTransient<RetailPricesEntryView>();
+            services.AddTransient<RetailPricesEntryViewModel>();
 
             // Views / ViewModels
             services.AddSingleton<MainWindow>();

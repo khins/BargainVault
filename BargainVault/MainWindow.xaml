@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="BargainVault"
         Width="420"
-        Height="875"
+        Height="975"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         UseLayoutRounding="True"
@@ -144,6 +144,9 @@
                 <Button Content="✏️ Inventory Lists"
         Style="{StaticResource MainMenuButtonStyle}"
         Click="InventoryLists_Click"/>
+                <Button Content="✏️ Retail Price Entry"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="RetailPriceEntry_Click"/>
 
                 <Button Content="Global Search"
         Style="{StaticResource MainMenuButtonStyle}"
