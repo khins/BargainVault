@@ -201,6 +201,17 @@ namespace BargainVault.ViewModels.Acquisitions
             set => SetProperty(ref _isEditMode, value);
         }
 
+        private bool _isDirty;
+        public bool IsDirty
+        {
+            get => _isDirty;
+            private set
+            {
+                SetProperty(ref _isDirty, value);
+                SaveCommand.RaiseCanExecuteChanged();
+            }
+        }
+
 
         // -------------------------
         // Commands
@@ -325,6 +336,10 @@ namespace BargainVault.ViewModels.Acquisitions
             AuctionSites.Clear();
             Statuses.Clear();
 
+            var items = await _lookupsService.GetItemsAsync();
+            foreach (var item in items)
+                Items.Add(item);
+
             foreach (var site in await _lookupsService.GetAuctionSitesAsync())
                 AuctionSites.Add(site);
 
@@ -356,6 +371,37 @@ namespace BargainVault.ViewModels.Acquisitions
             IsBusinessExpense = dto.BusinessExpense;
 
             IsEditMode = true;
+        }
+
+        public async Task LoadForEditAsync(int acqId)
+        {
+            await LoadLookupsAsync();
+            await LoadAcquisitionAsync(acqId);
+        }
+
+        private async Task LoadAcquisitionAsync(int acqId)
+        {
+            var dto = await _acquisitionsService.GetAcquisitionByIdAsync(acqId);
+            if (dto == null)
+                return;
+
+            _acqId = dto.AcqId;
+
+            SelectedItemId = dto.ItemId;
+            SelectedAuctionSiteId = dto.AuctionSiteId;
+            SelectedStatusId = dto.StatusId;
+
+            DateAcquired = dto.DateAcquired;
+            QtyAcquired = dto.QtyAcquired;
+            UnitHammerPrice = dto.UnitHammerPrice;
+            BuyerPremium = dto.BuyerPremium;
+            SalesTaxPaid = dto.SalesTaxPaid;
+            TotalSettlement = dto.TotalSettlement;
+
+            IsPersonal = dto.Personal;
+            IsBusinessExpense = dto.BusinessExpense;
+
+            IsDirty = false;
         }
 
 

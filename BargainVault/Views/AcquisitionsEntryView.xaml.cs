@@ -28,7 +28,8 @@ namespace BargainVault.Views
         {
             if (DataContext is AcquisitionsEntryViewModel vm)
             {
-                _ = vm.LoadAsync(acqId);
+                //_ = vm.LoadAsync(acqId);
+                _ = vm.LoadForEditAsync(acqId);
             }
         }
 

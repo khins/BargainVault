@@ -22,9 +22,9 @@ namespace BargainVault.Domain.Services
         public async Task<List<LookupDto>> GetAcquisitionStatusesAsync()
         {
             const string sql = @"
-                    SELECT status_id, name
-                    FROM acquisition_status
-                    ORDER BY name;
+                    SELECT status_id, status_name 
+                    FROM public.inventory_status
+                    ORDER BY status_name;
                 ";
 
             var results = new List<LookupDto>();
@@ -132,6 +132,35 @@ namespace BargainVault.Domain.Services
 
             return results;
         }
+
+        public async Task<List<ItemDto>> GetItemsAsync()
+        {
+            var results = new List<ItemDto>();
+
+            const string sql = @"
+                    SELECT item_id, title
+                    FROM items
+                    ORDER BY title;
+                ";
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                results.Add(new ItemDto
+                {
+                    ItemId = reader.GetInt32(0),
+                    Title = reader.GetString(1)
+                });
+            }
+
+            return results;
+        }
+
     }
 
 }
