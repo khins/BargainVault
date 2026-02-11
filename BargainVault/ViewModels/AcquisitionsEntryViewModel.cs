@@ -95,8 +95,16 @@ namespace BargainVault.ViewModels.Acquisitions
             {
                 SetProperty(ref _acqId, value);
                 SaveCommand.RaiseCanExecuteChanged();
+                OnPropertyChanged(nameof(AcqId));
+                
             }
-        }        
+        }
+
+        public string AcquisitionHeaderText =>
+                _acqId.HasValue
+        ? $"Acquisition Entry — Acq #{_acqId.Value}"
+        : "Acquisition Entry — New";
+
 
         private int? _selectedAuctionSiteId;
         public int? SelectedAuctionSiteId
@@ -345,6 +353,8 @@ namespace BargainVault.ViewModels.Acquisitions
 
             foreach (var status in await _lookupsService.GetAcquisitionStatusesAsync())
                 Statuses.Add(status);
+
+            OnPropertyChanged(nameof(AcquisitionHeaderText));
         }
 
         public void RaiseCanExecuteChanged()
@@ -354,23 +364,7 @@ namespace BargainVault.ViewModels.Acquisitions
 
         public async Task LoadAsync(int acqId)
         {
-            // 1️⃣ Load lookup data first
-            await LoadLookupsAsync();
-
-            // 2️⃣ Load acquisition
-            var dto = await _acquisitionsService.GetAcquisitionByIdAsync(acqId);
-
-            AcqId = dto.AcqId;
-            SelectedItemId = dto.ItemId;
-            DateAcquired = dto.DateAcquired;
-            UnitHammerPrice = dto.UnitHammerPrice;
-            BuyerPremium = dto.BuyerPremium;
-            SalesTaxPaid = dto.SalesTaxPaid;
-            TotalSettlement = dto.TotalSettlement;
-            IsPersonal = dto.Personal;
-            IsBusinessExpense = dto.BusinessExpense;
-
-            IsEditMode = true;
+            throw new NotImplementedException();
         }
 
         public async Task LoadForEditAsync(int acqId)

@@ -82,6 +82,11 @@
                    FontSize="22"
                    FontWeight="Bold"
                    Margin="0,0,0,16"/>
+        <TextBlock
+            Text="{Binding AcquisitionHeaderText, StringFormat=Acq \#{0}}"
+            FontSize="16"
+            Foreground="Gray"
+            VerticalAlignment="Bottom"/>
 
         <!-- =========================
              FORM BODY
