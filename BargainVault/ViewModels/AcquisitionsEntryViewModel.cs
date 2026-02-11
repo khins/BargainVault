@@ -371,6 +371,8 @@ namespace BargainVault.ViewModels.Acquisitions
         {
             await LoadLookupsAsync();
             await LoadAcquisitionAsync(acqId);
+
+            OnPropertyChanged(nameof(AcquisitionHeaderText));
         }
 
         private async Task LoadAcquisitionAsync(int acqId)
