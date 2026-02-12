@@ -5,8 +5,10 @@ using BargainVault.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace BargainVault.ViewModels.Items
 {
@@ -129,6 +131,25 @@ namespace BargainVault.ViewModels.Items
             private set => SetProperty(ref _createdAt, value);
         }
 
+        private string? _imagePath;
+        public string? ImagePath
+        {
+            get => _imagePath;
+            set => SetProperty(ref _imagePath, value);
+        }
+
+        public BitmapImage? ItemImage
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(ImagePath) || !File.Exists(ImagePath))
+                    return null;
+
+                return new BitmapImage(new Uri(ImagePath, UriKind.RelativeOrAbsolute));
+            }
+        }
+
+
         private void UpdateDirtyState()
         {
             IsDirty =
@@ -214,6 +235,23 @@ namespace BargainVault.ViewModels.Items
         {
             Close();
         }
+
+        public ICommand SelectImageCommand => new RelayCommand(SelectImage);
+
+        private void SelectImage()
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                ImagePath = dialog.FileName;
+                OnPropertyChanged(nameof(ItemImage));
+            }
+        }
+
     }
 
 }

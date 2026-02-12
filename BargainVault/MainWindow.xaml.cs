@@ -44,7 +44,7 @@ namespace BargainVault
 
         private void OpenItemsEntry_Click(object sender, RoutedEventArgs e)
         {
-            var view = App.Services.GetRequiredService<ItemsEntryView>();
+            var view = App.Services.GetRequiredService<Views.ItemsEntryView>();
             view.ShowDialog();
         }
 

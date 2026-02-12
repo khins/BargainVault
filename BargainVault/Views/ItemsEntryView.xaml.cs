@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace BargainVault.Views.Items
+namespace BargainVault.Views
 {
     public partial class ItemsEntryView : Window
     {

@@ -46,7 +46,7 @@ namespace BargainVault
             // Domain services
             services.AddSingleton<IItemsService, ItemsService>();
             services.AddTransient<ItemsEntryViewModel>();
-            services.AddTransient<ItemsEntryView>();
+            services.AddTransient<Views.ItemsEntryView>();
             services.AddTransient<ItemsListView>();
             services.AddTransient<ItemsListViewModel>();
             services.AddScoped<IAcquisitionsService, AcquisitionsService>();

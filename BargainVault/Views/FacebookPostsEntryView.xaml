@@ -80,6 +80,11 @@
                    FontSize="18"
                    FontWeight="SemiBold"
                    Margin="0,0,0,12"/>
+        <TextBlock
+            Text="{Binding PostIdHeaderText, StringFormat=Acq \#{0}}"
+            FontSize="16"
+            Foreground="Gray"
+            VerticalAlignment="Bottom"/>
 
         <!-- Form -->
         <Grid Grid.Row="1">

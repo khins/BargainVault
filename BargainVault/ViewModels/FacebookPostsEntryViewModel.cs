@@ -71,8 +71,8 @@ namespace BargainVault.ViewModels
             }
         }
 
-        private int _postId;
-        public int PostId
+        private int? _postId;
+        public int? PostId
         {
             get => _postId;
             set
@@ -81,6 +81,11 @@ namespace BargainVault.ViewModels
                     MarkDirty();
             }
         }
+
+        public string PostIdHeaderText =>
+            _postId.HasValue
+            ? $"Post Entry — Post #{_postId.Value}"
+            : "Post Entry — New";
 
         private int _selectedAcquisitionId;
         public int SelectedAcquisitionId
@@ -269,6 +274,7 @@ namespace BargainVault.ViewModels
             RenewDate = dto.RenewDate;
 
             IsEditMode = true;
+            OnPropertyChanged(nameof(PostIdHeaderText));
         }
 
     }

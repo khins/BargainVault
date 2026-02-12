@@ -6,7 +6,7 @@ namespace BargainVault.Domain.Models
 {
     public class FacebookPostDto
     {
-        public int PostId { get; set; }
+        public int? PostId { get; set; }
         public int AcqId { get; set; }
 
         public DateTime? PostDate { get; set; }

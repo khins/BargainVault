@@ -9,7 +9,7 @@ namespace BargainVault.UI
     {
         public static void OpenItem(int itemId)
         {
-            var view = App.Services.GetRequiredService<ItemsEntryView>();
+            var view = App.Services.GetRequiredService<Views.ItemsEntryView>();
             view.LoadItem(itemId);
             Show(view);
         }
