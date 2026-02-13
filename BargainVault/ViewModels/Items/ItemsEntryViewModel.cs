@@ -26,7 +26,11 @@ namespace BargainVault.ViewModels.Items
         public bool IsDirty
         {
             get => _isDirty;
-            private set => SetProperty(ref _isDirty, value);
+            set
+            {
+                if (SetProperty(ref _isDirty, value))
+                    ((RelayCommand)SaveCommand).RaiseCanExecuteChanged();
+            }
         }
 
         public ItemsEntryViewModel(IItemsService itemsService, ItemDto item) 
@@ -39,6 +43,7 @@ namespace BargainVault.ViewModels.Items
             Title = item.Title;
             Description = item.Description;
             CreatedAt = item.CreatedAt;
+            ImagePath = item.ImagePath;
            
             SaveCommand = new RelayCommand(async () => await SaveAsync(), CanSave);
             NewEntryCommand = new RelayCommand(NewEntry);
@@ -135,20 +140,48 @@ namespace BargainVault.ViewModels.Items
         public string? ImagePath
         {
             get => _imagePath;
-            set => SetProperty(ref _imagePath, value);
-        }
-
-        public BitmapImage? ItemImage
-        {
-            get
+            set
             {
-                if (string.IsNullOrEmpty(ImagePath) || !File.Exists(ImagePath))
-                    return null;
-
-                return new BitmapImage(new Uri(ImagePath, UriKind.RelativeOrAbsolute));
+                if (SetProperty(ref _imagePath, value))
+                {
+                    LoadImageFromPath();
+                    IsDirty = true;
+                }
             }
         }
 
+        private void LoadImageFromPath()
+        {
+            if (string.IsNullOrWhiteSpace(ImagePath) 
+                || !File.Exists(ImagePath))
+            {
+                ItemImage = null;
+                return;
+            }
+
+            try
+            {
+                var bitmap = new BitmapImage();
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.UriSource = new Uri(ImagePath, UriKind.Absolute);
+                bitmap.EndInit();
+                bitmap.Freeze();
+
+                ItemImage = bitmap;
+            }
+            catch
+            {
+                ItemImage = null;
+            }
+        }
+
+        private BitmapImage? _itemImage;
+        public BitmapImage? ItemImage
+        {
+            get => _itemImage;
+            private set => SetProperty(ref _itemImage, value);
+        }
 
         private void UpdateDirtyState()
         {
@@ -178,7 +211,7 @@ namespace BargainVault.ViewModels.Items
                     LotNumber,
                     Title,
                     Description,
-                    null,
+                    ImagePath,
                     1,
                     Environment.UserName
                 );
@@ -191,7 +224,7 @@ namespace BargainVault.ViewModels.Items
                     LotNumber,
                     Title,
                     Description,
-                    null,
+                    ImagePath,
                     1,
                     Environment.UserName
                 );
@@ -205,6 +238,7 @@ namespace BargainVault.ViewModels.Items
             Title = string.Empty;
             Description = string.Empty;
             CreatedAt = DateTime.Now;
+            ImagePath = null;
 
             OnPropertyChanged(string.Empty);
         }
@@ -226,7 +260,7 @@ namespace BargainVault.ViewModels.Items
             Title = dto.Title;
             Description = dto.Description;
             CreatedAt = dto.CreatedAt;
-
+            ImagePath = dto.ImagePath;
             IsEditMode = true;
         }
 

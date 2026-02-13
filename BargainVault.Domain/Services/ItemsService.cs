@@ -1,6 +1,7 @@
 ﻿using BargainVault.Domain.Models;
 using Npgsql;
 using System.Configuration;
+using System.Data;
 
 namespace BargainVault.Domain.Services
 {
@@ -60,7 +61,7 @@ namespace BargainVault.Domain.Services
             await conn.OpenAsync();
 
             const string sql = @"
-                    SELECT item_id, lot_number, title, description, created_at
+                    SELECT item_id, lot_number, title, description, created_at, image_path
                     FROM public.items
                     ORDER BY title ASC;
                 ";
@@ -76,7 +77,8 @@ namespace BargainVault.Domain.Services
                     LotNumber = reader.GetInt32(1),
                     Title = reader.GetString(2),
                     Description = reader.IsDBNull(3) ? null : reader.GetString(3),
-                    CreatedAt = reader.IsDBNull(4) ? null : reader.GetDateTime(4)
+                    CreatedAt = reader.IsDBNull(4) ? null : reader.GetDateTime(4),
+                    ImagePath = reader.IsDBNull(5) ? null : reader.GetString(5),
                 });
             }
 
@@ -131,7 +133,8 @@ namespace BargainVault.Domain.Services
             lot_number,
             title,
             description,
-            created_at
+            created_at, 
+            image_path
           FROM items
           WHERE item_id = @item_id;",
                 conn);
@@ -150,7 +153,8 @@ namespace BargainVault.Domain.Services
                 LotNumber = reader.GetInt32(1),
                 Title = reader.GetString(2),
                 Description = reader.IsDBNull(3) ? null : reader.GetString(3),
-                CreatedAt = reader.GetDateTime(4)
+                CreatedAt = reader.GetDateTime(4),
+                ImagePath = reader.GetString(5),
             };
         }
 
