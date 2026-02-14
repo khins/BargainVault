@@ -20,7 +20,18 @@ namespace BargainVault.ViewModels.Items
         private readonly IItemsService _itemsService;
         public RelayCommand SaveCommand { get; }
 
-        private int ItemId { get; set; }
+        private int _itemId;
+        public int ItemId
+        {
+            get => _itemId;
+            set
+            {
+                if (SetProperty(ref _itemId, value))
+                {
+                    OnPropertyChanged(nameof(HeaderText));
+                }                   
+            }
+        }
 
         private bool _isDirty;
         public bool IsDirty
@@ -133,8 +144,15 @@ namespace BargainVault.ViewModels.Items
         public DateTime? CreatedAt
         {
             get => _createdAt;
-            private set => SetProperty(ref _createdAt, value);
+            set
+            {
+                if (SetProperty(ref _createdAt, value))
+                    OnPropertyChanged(nameof(CreatedAtDisplay));
+            }
         }
+
+        public string CreatedAtDisplay =>
+            CreatedAt.HasValue ? CreatedAt.Value.ToString("MMM dd, yyyy") : "Not recorded";
 
         private string? _imagePath;
         public string? ImagePath
@@ -149,6 +167,11 @@ namespace BargainVault.ViewModels.Items
                 }
             }
         }
+
+        public string HeaderText =>
+            ItemId > 0
+            ? $" ID: {ItemId}"
+            : "Item Entry — New Item";
 
         private void LoadImageFromPath()
         {

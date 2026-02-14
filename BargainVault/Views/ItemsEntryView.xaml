@@ -3,8 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Item Entry"
         Width="820"
-        Height="560"
+        Height="660"
         WindowStartupLocation="CenterOwner">
+
     <Window.Resources>
 
         <Style x:Key="MainMenuButtonStyle" TargetType="Button">
@@ -20,43 +21,38 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border
-                        x:Name="border"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="6">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
 
                             <ContentPresenter
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            RecognizesAccessKey="True"/>
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                RecognizesAccessKey="True"/>
                         </Border>
 
-                        <!-- Visual states -->
                         <ControlTemplate.Triggers>
 
-                            <!-- Hover -->
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border"
-                                    Property="Background"
-                                    Value="#D6D6D6"/>
+                                        Property="Background"
+                                        Value="#D6D6D6"/>
                             </Trigger>
 
-                            <!-- Pressed -->
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="border"
-                                    Property="Background"
-                                    Value="#C8C8C8"/>
+                                        Property="Background"
+                                        Value="#C8C8C8"/>
                             </Trigger>
 
-                            <!-- Disabled -->
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="border"
-                                    Property="Background"
-                                    Value="#EEEEEE"/>
+                                        Property="Background"
+                                        Value="#EEEEEE"/>
                                 <Setter Property="Foreground"
-                                    Value="#888888"/>
+                                        Value="#888888"/>
                             </Trigger>
 
                         </ControlTemplate.Triggers>
@@ -66,6 +62,7 @@
         </Style>
 
     </Window.Resources>
+
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -107,8 +104,15 @@
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <!-- Title -->
                     <RowDefinition Height="Auto"/>
+                    <!-- Lot -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Description -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Created -->
                     <RowDefinition Height="*"/>
+                    <!-- Spacer -->
                 </Grid.RowDefinitions>
 
                 <!-- Title -->
@@ -131,12 +135,22 @@
                 <StackPanel Grid.Row="2">
                     <TextBlock Text="Description" FontWeight="SemiBold"/>
                     <TextBox Text="{Binding Description}"
-                             Margin="0,4,0,0"
+                             Margin="0,4,0,8"
                              AcceptsReturn="True"
                              TextWrapping="Wrap"
                              VerticalScrollBarVisibility="Auto"
                              Height="200"/>
                 </StackPanel>
+
+                <!-- ✅ CREATED DATE (new section) -->
+                <StackPanel Grid.Row="3">
+                    <TextBlock Text="Created"
+                               FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding CreatedAtDisplay}"
+                               Foreground="Gray"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+
             </Grid>
 
             <!-- RIGHT SIDE - IMAGE -->
@@ -152,7 +166,6 @@
                                FontWeight="SemiBold"
                                Margin="0,0,0,8"/>
 
-                    <!-- Image Preview -->
                     <Border BorderBrush="#CCC"
                             BorderThickness="1"
                             Height="260"
@@ -166,7 +179,7 @@
                     </Border>
 
                     <Button Content="Select Image"
-Style="{StaticResource MainMenuButtonStyle}"
+                            Style="{StaticResource MainMenuButtonStyle}"
                             Command="{Binding SelectImageCommand}"/>
                 </StackPanel>
 
@@ -181,12 +194,13 @@ Style="{StaticResource MainMenuButtonStyle}"
                     HorizontalAlignment="Right">
 
             <Button Content="Save"
-Style="{StaticResource MainMenuButtonStyle}"
+                    Style="{StaticResource MainMenuButtonStyle}"
                     Command="{Binding SaveCommand}"/>
 
             <Button Content="Close"
-Style="{StaticResource MainMenuButtonStyle}"
+                    Style="{StaticResource MainMenuButtonStyle}"
                     IsCancel="True"/>
         </StackPanel>
+
     </Grid>
 </Window>
