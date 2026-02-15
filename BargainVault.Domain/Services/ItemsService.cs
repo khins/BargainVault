@@ -63,7 +63,7 @@ namespace BargainVault.Domain.Services
             const string sql = @"
                     SELECT item_id, lot_number, title, description, created_at, image_path
                     FROM public.items
-                    ORDER BY title ASC;
+                    ORDER BY created_at DESC NULLS LAST, item_id DESC;
                 ";
 
             await using var cmd = new NpgsqlCommand(sql, conn);

@@ -148,6 +148,7 @@ namespace BargainVault.ViewModels.Items
             {
                 if (SetProperty(ref _createdAt, value))
                     OnPropertyChanged(nameof(CreatedAtDisplay));
+                OnPropertyChanged(nameof(DaysInInventoryDisplay));
             }
         }
 
@@ -165,6 +166,18 @@ namespace BargainVault.ViewModels.Items
                     LoadImageFromPath();
                     IsDirty = true;
                 }
+            }
+        }
+
+        public string DaysInInventoryDisplay
+        {
+            get
+            {
+                if (!CreatedAt.HasValue)
+                    return "Unknown";
+
+                var days = (DateTime.Now.Date - CreatedAt.Value.Date).Days;
+                return $"{days} day{(days == 1 ? "" : "s")}";
             }
         }
 

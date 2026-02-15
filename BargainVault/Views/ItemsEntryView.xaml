@@ -149,6 +149,12 @@
                     <TextBlock Text="{Binding CreatedAtDisplay}"
                                Foreground="Gray"
                                Margin="0,4,0,0"/>
+                    <TextBlock Text="Days in inventory:"
+                               FontWeight="SemiBold"
+                               Margin="0,6,0,0"/>
+                    <TextBlock Text="{Binding DaysInInventoryDisplay}"
+                               Foreground="#2e7d32"
+                               />
                 </StackPanel>
 
             </Grid>
