@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Sales Dashboard"
-        Width="800"
-        Height="480"
+        Width="720"
+        Height="460"
         WindowStartupLocation="CenterOwner">
     <Window.Resources>
 
@@ -21,16 +21,16 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border
-                   x:Name="border"
-                   Background="{TemplateBinding Background}"
-                   BorderBrush="{TemplateBinding BorderBrush}"
-                   BorderThickness="{TemplateBinding BorderThickness}"
-                   CornerRadius="6">
+                x:Name="border"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="6">
 
                             <ContentPresenter
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       RecognizesAccessKey="True"/>
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    RecognizesAccessKey="True"/>
                         </Border>
 
                         <!-- Visual states -->
@@ -39,24 +39,24 @@
                             <!-- Hover -->
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="border"
-                               Property="Background"
-                               Value="#D6D6D6"/>
+                            Property="Background"
+                            Value="#D6D6D6"/>
                             </Trigger>
 
                             <!-- Pressed -->
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="border"
-                               Property="Background"
-                               Value="#C8C8C8"/>
+                            Property="Background"
+                            Value="#C8C8C8"/>
                             </Trigger>
 
                             <!-- Disabled -->
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter TargetName="border"
-                               Property="Background"
-                               Value="#EEEEEE"/>
+                            Property="Background"
+                            Value="#EEEEEE"/>
                                 <Setter Property="Foreground"
-                               Value="#888888"/>
+                            Value="#888888"/>
                             </Trigger>
 
                         </ControlTemplate.Triggers>
@@ -67,28 +67,38 @@
 
     </Window.Resources>
 
-    <Grid Margin="12">
+
+    <Grid Margin="14">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="8"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <TextBlock Text="📊 Monthly Sales Summary"
-                   FontSize="18"
-                   FontWeight="SemiBold"
-                   Margin="0,0,0,12"/>
+        <!-- HEADER -->
+        <TextBlock Grid.Row="0"
+                   Text="📊 Monthly Sales Summary"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Margin="0,0,0,6"/>
 
-        <!-- DataGrid -->
-        <DataGrid Grid.Row="1"
+        <!-- DATAGRID -->
+        <DataGrid Grid.Row="2"
                   ItemsSource="{Binding MonthlySales}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  SelectionMode="Single"
+                  CanUserAddRows="False"
+                  RowHeight="28"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal"
+                  VerticalScrollBarVisibility="Auto"
                   MouseDoubleClick="DashboardGrid_DoubleClick">
 
             <DataGrid.Columns>
+
                 <DataGridTextColumn Header="Year"
                                     Binding="{Binding Year}"
                                     Width="80"/>
@@ -99,24 +109,55 @@
 
                 <DataGridTextColumn Header="Total Sales"
                                     Binding="{Binding TotalSales, StringFormat=C}"
-                                    Width="*"/>
+                                    Width="160"/>
 
                 <DataGridTextColumn Header="Qty Sold"
                                     Binding="{Binding TotalQuantity}"
                                     Width="120"/>
+
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Footer / Close -->
-        <StackPanel Grid.Row="2"
+        <!-- TOTAL FOOTER -->
+        <Border Grid.Row="3"
+                Background="#F3F3F3"
+                Padding="8"
+                Margin="0,6,0,8"
+                BorderBrush="#CCCCCC"
+                BorderThickness="1">
+
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="160"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="1"
+                           Text="TOTAL:"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="2"
+                           Text="{Binding TotalSales, StringFormat=C}"
+                           FontWeight="Bold"
+                           FontSize="15"
+                           VerticalAlignment="Center"/>
+
+            </Grid>
+        </Border>
+
+        <!-- CLOSE BUTTON -->
+        <StackPanel Grid.Row="4"
                     Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0,12,0,0">
+                    HorizontalAlignment="Right">
 
             <Button Content="Close"
-                    Style="{StaticResource MainMenuButtonStyle}"
-                    IsCancel="True"
-                    Click="Close"/>
+Style="{StaticResource MainMenuButtonStyle}"
+                    IsCancel="True"/>
         </StackPanel>
+
     </Grid>
 </Window>
