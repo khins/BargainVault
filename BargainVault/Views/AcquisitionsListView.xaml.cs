@@ -13,7 +13,7 @@ namespace BargainVault.Views.Acquisitions
         {
             InitializeComponent();
             DataContext = vm;
-
+            //
             Loaded += async (_, _) => await vm.LoadAsync();
         }
 
@@ -87,5 +87,34 @@ namespace BargainVault.Views.Acquisitions
         {
             Close();
         }
+
+        private void FilterDates_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is not AcquisitionsListViewModel vm)
+                return;
+
+            var dlg = new Common.DateRangeDialog
+            {
+                Owner = this,
+                StartDate = vm.FilterStart ?? DateTime.Today.AddMonths(-1),
+                EndDate = vm.FilterEnd ?? DateTime.Today
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                vm.FilterStart = dlg.StartDate;
+                vm.FilterEnd = dlg.EndDate;
+            }
+        }
+
+        private void ClearFilter_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is not AcquisitionsListViewModel vm)
+                return;
+
+            vm.FilterStart = null;
+            vm.FilterEnd = null;
+        }
+
     }
 }

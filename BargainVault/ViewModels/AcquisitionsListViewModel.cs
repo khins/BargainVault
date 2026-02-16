@@ -47,6 +47,37 @@ namespace BargainVault.ViewModels.Acquisitions
             }
         }
 
+        private DateTime? _filterStart;
+        public DateTime? FilterStart
+        {
+            get => _filterStart;
+            set
+            {
+                SetProperty(ref _filterStart, value);
+                ItemsView?.Refresh();
+                UpdateTotals();
+            }
+        }
+
+        private DateTime? _filterEnd;
+        public DateTime? FilterEnd
+        {
+            get => _filterEnd;
+            set
+            {
+                SetProperty(ref _filterEnd, value);
+                ItemsView?.Refresh();
+                UpdateTotals();
+            }
+        }
+
+        private decimal _totalSettlement;
+        public decimal TotalSettlement
+        {
+            get => _totalSettlement;
+            set => SetProperty(ref _totalSettlement, value);
+        }
+
         private ICollectionView? _itemsView;
         public ICollectionView? ItemsView
         {
@@ -56,16 +87,20 @@ namespace BargainVault.ViewModels.Acquisitions
 
         private bool FilterItems(object obj)
         {
-            if (obj is not AcquisitionListDto item)
+            if (obj is not AcquisitionListDto a)
                 return false;
 
-            if (string.IsNullOrWhiteSpace(SearchText))
-                return true;
+            if (FilterStart.HasValue && a.DateAcquired < FilterStart.Value)
+                return false;
 
-            var text = SearchText.ToLower();
+            if (FilterEnd.HasValue && a.DateAcquired > FilterEnd.Value)
+                return false;
 
-            return
-                item.ItemTitle?.ToLower().Contains(text) == true;
+            if (!string.IsNullOrWhiteSpace(SearchText) &&
+                !a.ItemTitle.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            return true;
         }
 
         private ObservableCollection<AcquisitionListDto> _items = new();
@@ -76,6 +111,14 @@ namespace BargainVault.ViewModels.Acquisitions
         }
 
         public ICommand RefreshCommand { get; }
+
+        private void UpdateTotals()
+        {
+            if (ItemsView == null) return;
+
+            TotalSettlement = ItemsView.Cast<AcquisitionListDto>()
+                                       .Sum(x => x.TotalSettlement ?? 0m);
+        }
 
         public async Task LoadAsync()
         {
@@ -92,5 +135,7 @@ namespace BargainVault.ViewModels.Acquisitions
 
             OnPropertyChanged(nameof(ItemsView));
         }
+
+
     }
 }
