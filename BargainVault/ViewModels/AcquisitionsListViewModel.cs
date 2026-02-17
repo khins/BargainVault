@@ -84,10 +84,17 @@ namespace BargainVault.ViewModels.Acquisitions
             set => SetProperty(ref _totalSettlement, value);
         }
 
-        public string ActiveFilterText =>
-    FilterStart == null && FilterEnd == null
-        ? "Showing all acquisitions"
-        : $"Showing acquisitions from {FilterStart:MM/dd/yyyy} to {FilterEnd:MM/dd/yyyy}";
+        public string ActiveFilterText
+        {
+            get
+            {
+                if (FilterStart == null && FilterEnd == null)
+                    return "Showing all acquisitions";
+
+                return $"Showing: {FilterStart:MM/dd/yyyy} → {FilterEnd:MM/dd/yyyy}";
+            }
+        }
+
 
 
         private ICollectionView? _itemsView;
