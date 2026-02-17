@@ -53,9 +53,12 @@ namespace BargainVault.ViewModels.Acquisitions
             get => _filterStart;
             set
             {
-                SetProperty(ref _filterStart, value);
-                ItemsView?.Refresh();
-                UpdateTotals();
+                if (SetProperty(ref _filterStart, value))
+                {
+                    OnPropertyChanged(nameof(ActiveFilterText));
+                    ItemsView?.Refresh();
+                    UpdateTotals();
+                }
             }
         }
 
@@ -65,9 +68,12 @@ namespace BargainVault.ViewModels.Acquisitions
             get => _filterEnd;
             set
             {
-                SetProperty(ref _filterEnd, value);
-                ItemsView?.Refresh();
-                UpdateTotals();
+                if (SetProperty(ref _filterEnd, value))
+                {
+                    OnPropertyChanged(nameof(ActiveFilterText));
+                    ItemsView?.Refresh();
+                    UpdateTotals();
+                }
             }
         }
 
@@ -77,6 +83,12 @@ namespace BargainVault.ViewModels.Acquisitions
             get => _totalSettlement;
             set => SetProperty(ref _totalSettlement, value);
         }
+
+        public string ActiveFilterText =>
+    FilterStart == null && FilterEnd == null
+        ? "Showing all acquisitions"
+        : $"Showing acquisitions from {FilterStart:MM/dd/yyyy} to {FilterEnd:MM/dd/yyyy}";
+
 
         private ICollectionView? _itemsView;
         public ICollectionView? ItemsView
