@@ -14,6 +14,7 @@ namespace BargainVault.Domain.Services
         Task<RetailPriceDto> GetRetailPriceByIdAsync(int retailPriceId);
         Task<List<RetailPriceDto>> GetRetailPricesForItemAsync(int itemId);
 
+        Task<List<RetailPriceListDto>> GetRetailPricesAsync();
 
     }
 

@@ -16,6 +16,12 @@ namespace BargainVault.ViewModels
         private readonly IStoresService _storesService;
 
         private int? _retailPriceId;
+        public int? RetailPriceId
+        {
+            get => _retailPriceId;
+            set => SetProperty(ref _retailPriceId, value);
+        }
+
         private bool _isDirty;
 
         public ObservableCollection<ItemDto> Items { get; } = new();
@@ -39,6 +45,31 @@ namespace BargainVault.ViewModels
             PriceDate = DateTime.Today;
 
             _ = LoadLookupsAsync();
+        }
+
+        public RetailPricesEntryViewModel(
+        IRetailPricesService retailPricesService,
+        IItemsService itemsService,
+        IStoresService storesService,
+        RetailPriceDto dto)
+: this(retailPricesService, itemsService, storesService)
+        {
+            // Put the VM into edit mode using the existing record
+            RetailPriceId = dto.RetailPriceId;
+
+            SelectedItemId = dto.ItemId;
+            SelectedStoreId = dto.StoreId;
+
+            RetailPrice = dto.RetailPrice;
+            PriceDate = dto.PriceDate;
+            IsSalePrice = dto.IsSalePrice;
+            Notes = dto.Notes;
+
+            // This is an existing record so NOT dirty at load
+            IsDirty = false;
+
+            // Ensure Save button state updates
+            SaveCommand?.RaiseCanExecuteChanged();
         }
 
         #region Properties

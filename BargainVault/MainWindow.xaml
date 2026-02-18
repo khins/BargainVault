@@ -147,6 +147,9 @@
                 <Button Content="✏️ Retail Price Entry"
         Style="{StaticResource MainMenuButtonStyle}"
         Click="RetailPriceEntry_Click"/>
+                <Button Content="Retail Prices"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="OpenRetailPrices_Click"/>
 
                 <Button Content="Global Search"
         Style="{StaticResource MainMenuButtonStyle}"

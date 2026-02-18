@@ -172,5 +172,49 @@ namespace BargainVault.Domain.Services
 
             return results;
         }
+
+        public async Task<List<RetailPriceListDto>> GetRetailPricesAsync()
+        {
+            var results = new List<RetailPriceListDto>();
+
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            const string sql = @"
+                    SELECT
+                        rp.retail_price_id,
+                        rp.item_id,
+                        i.title,
+                        rp.store_id,
+                        s.store_name,
+                        rp.retail_price,
+                        rp.price_date,
+                        rp.is_sale_price
+                    FROM retail_prices rp
+                    JOIN items i ON i.item_id = rp.item_id
+                    JOIN stores s ON s.store_id = rp.store_id
+                    ORDER BY rp.retail_price_id DESC;
+                    ";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                results.Add(new RetailPriceListDto
+                {
+                    RetailPriceId = reader.GetInt32(0),
+                    ItemId = reader.GetInt32(1),
+                    ItemTitle = reader.GetString(2),
+                    StoreId = reader.GetInt32(3),
+                    StoreName = reader.GetString(4),
+                    RetailPrice = reader.GetDecimal(5),
+                    PriceDate = reader.IsDBNull(6) ? null : reader.GetDateTime(6),
+                    IsSalePrice = reader.GetBoolean(7)
+                });
+            }
+
+            return results;
+        }
     }
 }

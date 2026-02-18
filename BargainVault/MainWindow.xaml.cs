@@ -193,5 +193,12 @@ namespace BargainVault
             view.Owner = this;
             view.ShowDialog();
         }
+
+        private void OpenRetailPrices_Click(object sender, RoutedEventArgs e)
+        {
+            var view = App.Services.GetRequiredService<RetailPricesListView>();
+            view.Owner = this;
+            view.ShowDialog();
+        }
     }
 }
