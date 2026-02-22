@@ -361,3 +361,28 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/database/functions/delete_facebook_posts.sql
+/database/functions/delete_inventory_locations.sql
+/database/functions/delete_inventory_location_by_items.sql
+/database/functions/delete_retail_prices.sql
+/database/functions/delete_sales.sql
+/database/functions/global_searchs.sql
+/database/functions/insert_acquisitions.sql
+/database/functions/insert_acquisitions2.sql
+/database/functions/insert_facebook_posts.sql
+/database/functions/insert_facebook_posts2.sql
+/database/functions/insert_inventory_locations.sql
+/database/functions/insert_inventory_locations2.sql
+/database/functions/insert_items.sql
+/database/functions/insert_retail_prices.sql
+/database/functions/insert_retail_prices2.sql
+/database/functions/insert_retail_prices3.sql
+/database/functions/insert_sales.sql
+/database/functions/insert_sales3.sql
+/database/functions/mark_facebook_posts_sold_by_acqs.sql
+/database/functions/mark_facebook_posts_sold_by_items.sql
+/database/functions/remaining functions.sql
+/database/functions/set_updated_at.sql
+/database/functions/update_acquisitions.sql
+/database/functions/update_acquisitions2.sql
+/database/functions/vw_auction_profit_analysis1.sql

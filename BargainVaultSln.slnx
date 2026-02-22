@@ -2,6 +2,62 @@
   <Folder Name="/DataAccess/">
     <Project Path="BargainVault.Data/BargainVault.Data.csproj" />
   </Folder>
+  <Folder Name="/Database/">
+    <File Path="database/full db script.sql" />
+  </Folder>
+  <Folder Name="/Database/Functions/">
+    <File Path="database/functions/delete_acquisitions.sql" />
+    <File Path="database/functions/delete_facebook_posts.sql" />
+    <File Path="database/functions/delete_inventory_locations.sql" />
+    <File Path="database/functions/delete_inventory_location_by_items.sql" />
+    <File Path="database/functions/delete_retail_prices.sql" />
+    <File Path="database/functions/delete_sales.sql" />
+    <File Path="database/functions/global_searchs.sql" />
+    <File Path="database/functions/insert_acquisitions.sql" />
+    <File Path="database/functions/insert_acquisitions2.sql" />
+    <File Path="database/functions/insert_facebook_posts.sql" />
+    <File Path="database/functions/insert_facebook_posts2.sql" />
+    <File Path="database/functions/insert_inventory_locations.sql" />
+    <File Path="database/functions/insert_inventory_locations2.sql" />
+    <File Path="database/functions/insert_items.sql" />
+    <File Path="database/functions/insert_retail_prices.sql" />
+    <File Path="database/functions/insert_retail_prices2.sql" />
+    <File Path="database/functions/insert_retail_prices3.sql" />
+    <File Path="database/functions/insert_sales.sql" />
+    <File Path="database/functions/insert_sales3.sql" />
+    <File Path="database/functions/mark_facebook_posts_sold_by_acqs.sql" />
+    <File Path="database/functions/mark_facebook_posts_sold_by_items.sql" />
+    <File Path="database/functions/remaining functions.sql" />
+    <File Path="database/functions/set_updated_at.sql" />
+    <File Path="database/functions/update_acquisitions.sql" />
+    <File Path="database/functions/update_acquisitions2.sql" />
+    <File Path="database/functions/vw_auction_profit_analysis1.sql" />
+  </Folder>
+  <Folder Name="/Database/Tables/">
+    <File Path="database/tables/acquisitions.sql" />
+    <File Path="database/tables/acquisition_loss.sql" />
+    <File Path="database/tables/auction_items.sql" />
+    <File Path="database/tables/auction_sites.sql" />
+    <File Path="database/tables/booths.sql" />
+    <File Path="database/tables/business_expenses.sql" />
+    <File Path="database/tables/facebook_posts.sql" />
+    <File Path="database/tables/inventory_locations.sql" />
+    <File Path="database/tables/inventory_status.sql" />
+    <File Path="database/tables/items.sql" />
+    <File Path="database/tables/mileage_tracking.sql" />
+    <File Path="database/tables/retail_prices.sql" />
+    <File Path="database/tables/sales.sql" />
+    <File Path="database/tables/sales_channels.sql" />
+    <File Path="database/tables/Script-12.sql" />
+    <File Path="database/tables/stores new.sql" />
+    <File Path="database/tables/trip_type.sql" />
+    <File Path="database/tables/trip_types.sql" />
+    <File Path="database/tables/work_category.sql" />
+    <File Path="database/tables/work_hours.sql" />
+  </Folder>
+  <Folder Name="/Database/Views/">
+    <File Path="database/views/vw_auction_profit_analysis1.sql" />
+  </Folder>
   <Folder Name="/Domain/">
     <Project Path="BargainVault.Domain/BargainVault.Domain.csproj" />
   </Folder>
