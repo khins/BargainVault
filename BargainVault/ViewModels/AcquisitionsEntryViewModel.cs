@@ -229,6 +229,10 @@ namespace BargainVault.ViewModels.Acquisitions
 
         private bool CanSave()
         {
+            if (_acqId != null)
+            {
+                IsEditMode = true;
+            }
             return SelectedItemId.HasValue
                 && UnitHammerPrice.HasValue;
         }
