@@ -98,6 +98,11 @@ namespace BargainVault
             services.AddTransient<RetailPricesListViewModel>();
             services.AddTransient<RetailPricesListView>();
 
+            // ILE
+            services.AddScoped<ILiquidationService, LiquidationService>();
+            services.AddTransient<LiquidationViewModel>();
+            services.AddTransient<LiquidationView>();
+
             // Views / ViewModels
             services.AddSingleton<MainWindow>();
         }
