@@ -14,6 +14,8 @@ namespace BargainVault.ViewModels
         private readonly IRetailPricesService _retailPricesService;
         private readonly IItemsService _itemsService;
         private readonly IStoresService _storesService;
+        private readonly RelayCommand _saveCommand;
+        private readonly RelayCommand _closeCommand;
 
         private int? _retailPriceId;
         public int? RetailPriceId
@@ -27,8 +29,8 @@ namespace BargainVault.ViewModels
         public ObservableCollection<ItemDto> Items { get; } = new();
         public ObservableCollection<StoreDto> Stores { get; } = new();
 
-        public RelayCommand SaveCommand { get; }
-        public RelayCommand CloseCommand { get; }
+        public RelayCommand SaveCommand => _saveCommand;
+        public RelayCommand CloseCommand => _closeCommand;
 
         public RetailPricesEntryViewModel(
             IRetailPricesService retailPricesService,
@@ -38,22 +40,24 @@ namespace BargainVault.ViewModels
             _retailPricesService = retailPricesService;
             _itemsService = itemsService;
             _storesService = storesService;
-
-            SaveCommand = new RelayCommand(async () => await SaveAsync(), CanSave);
-            CloseCommand = new RelayCommand(Close);
-
+            _saveCommand = new RelayCommand(async () => await SaveAsync(), CanSave);
+            _closeCommand = new RelayCommand(Close);
             PriceDate = DateTime.Today;
-
             _ = LoadLookupsAsync();
         }
 
         public RetailPricesEntryViewModel(
-        IRetailPricesService retailPricesService,
-        IItemsService itemsService,
-        IStoresService storesService,
-        RetailPriceDto dto)
-: this(retailPricesService, itemsService, storesService)
+            IRetailPricesService retailPricesService,
+            IItemsService itemsService,
+            IStoresService storesService,
+            RetailPriceDto dto)
         {
+            _retailPricesService = retailPricesService;
+            _itemsService = itemsService;
+            _storesService = storesService;
+            _saveCommand = new RelayCommand(async () => await SaveAsync(), CanSave);
+            _closeCommand = new RelayCommand(Close);
+
             // Put the VM into edit mode using the existing record
             RetailPriceId = dto.RetailPriceId;
 
@@ -146,6 +150,8 @@ namespace BargainVault.ViewModels
         public async Task LoadRetailPriceAsync(int retailPriceId)
         {
             var dto = await _retailPricesService.GetRetailPriceByIdAsync(retailPriceId);
+            if (dto == null)
+                return;
 
             _retailPriceId = dto.RetailPriceId;
 

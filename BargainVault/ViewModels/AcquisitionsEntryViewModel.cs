@@ -35,7 +35,6 @@ namespace BargainVault.ViewModels.Acquisitions
             DateAcquired = DateTime.Today;
 
             _ = LoadLookupsAsync();
-            _lookupsService = lookupsService;
         }
 
         public AcquisitionsEntryViewModel(
@@ -239,6 +238,9 @@ namespace BargainVault.ViewModels.Acquisitions
 
         private AcquisitionDto BuildDto()
         {
+            if (!SelectedItemId.HasValue)
+                throw new InvalidOperationException("An item must be selected before saving.");
+
             return new AcquisitionDto
             {
                 AcqId = _acqId ?? 0,   // used for UPDATE, ignored for INSERT
@@ -266,6 +268,9 @@ namespace BargainVault.ViewModels.Acquisitions
 
         private async Task SaveAsync()
         {
+            if (!SelectedItemId.HasValue)
+                return;
+
             if (IsEditMode)
             {
                 await _acquisitionsService.UpdateAcquisitionAsync(BuildDto());

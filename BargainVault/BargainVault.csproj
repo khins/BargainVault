@@ -12,13 +12,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BargainVault.Domain\BargainVault.Domain.csproj" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
-
   </ItemGroup>
 
   <ItemGroup>

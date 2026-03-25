@@ -16,7 +16,7 @@ namespace BargainVault.ViewModels
         public ObservableCollection<InventoryLocationListDto> Locations { get; }
             = new();
 
-        public ICollectionView LocationsView { get; private set; }
+        public ICollectionView? LocationsView { get; private set; }
 
         public InventoryLocationsListViewModel(IInventoryLocationsService service)
         {

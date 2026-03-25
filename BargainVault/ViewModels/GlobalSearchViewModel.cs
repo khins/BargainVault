@@ -13,7 +13,7 @@ namespace BargainVault.ViewModels
             public ObservableCollection<GlobalSearchResultDto> Results { get; }
                 = new ObservableCollection<GlobalSearchResultDto>();
 
-            private string _searchText;
+            private string _searchText = string.Empty;
             public string SearchText
             {
                 get => _searchText;

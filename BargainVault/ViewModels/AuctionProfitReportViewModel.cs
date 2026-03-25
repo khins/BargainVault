@@ -1,11 +1,9 @@
 ﻿using BargainVault.Domain.Models;
 using BargainVault.Domain.Services;
 using BargainVault.ViewModels.Base;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace BargainVault.ViewModels
@@ -38,7 +36,7 @@ namespace BargainVault.ViewModels
             OnPropertyChanged(nameof(ItemsView));
         }
 
-        private ObservableCollection<AuctionProfitDto> _items;
+        private ObservableCollection<AuctionProfitDto> _items = new();
         public ObservableCollection<AuctionProfitDto> Items
         {
             get => _items;
@@ -49,9 +47,9 @@ namespace BargainVault.ViewModels
             }
         }
 
-        public ICollectionView ItemsView { get; private set; }
+        public ICollectionView? ItemsView { get; private set; }
 
-        private string _searchText;
+        private string _searchText = string.Empty;
         public string SearchText
         {
             get => _searchText;
