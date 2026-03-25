@@ -24,8 +24,8 @@ namespace BargainVault.ViewModels.Acquisitions
 
         public ObservableCollection<AcquisitionListDto> Acquisitions { get; }
 
-        private AcquisitionListDto _selectedAcquisition;
-        public AcquisitionListDto SelectedAcquisition
+        private AcquisitionListDto? _selectedAcquisition;
+        public AcquisitionListDto? SelectedAcquisition
         {
             get => _selectedAcquisition;
             set

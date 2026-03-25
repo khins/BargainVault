@@ -2,11 +2,9 @@
 using BargainVault.ViewModels;
 using BargainVault.ViewModels.Acquisitions;
 using BargainVault.ViewModels.Items;
-using BargainVault.ViewModels.Items.BargainVault.ViewModels.Items;
 using BargainVault.Views;
 using BargainVault.Views.Acquisitions;
 using BargainVault.Views.Items;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 
@@ -14,7 +12,7 @@ namespace BargainVault
 {
     public partial class App : Application
     {
-        public static IServiceProvider Services { get; private set; }
+        public static IServiceProvider Services { get; private set; } = null!;
 
         protected override void OnStartup(StartupEventArgs e)
         {

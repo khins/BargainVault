@@ -1,12 +1,11 @@
-﻿using BargainVault.Commands;
+using BargainVault.Commands;
 using BargainVault.Domain.Models;
 using BargainVault.Domain.Services;
 using BargainVault.ViewModels.Base;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
@@ -14,11 +13,46 @@ namespace BargainVault.ViewModels.Items
 {
     public class ItemsEntryViewModel : ViewModelBase
     {
-        private string _originalTitle;
-        private string _originalDescription;
+        private string _originalTitle = string.Empty;
+        private string _originalDescription = string.Empty;
         private int? _originalLotNumber;
         private readonly IItemsService _itemsService;
+
+        public ItemsEntryViewModel(IItemsService itemsService, ItemDto item)
+            : this(itemsService)
+        {
+            ItemId = item.ItemId;
+            LotNumber = item.LotNumber;
+            Title = item.Title;
+            Description = item.Description;
+            CreatedAt = item.CreatedAt;
+            ImagePath = item.ImagePath;
+
+            CaptureOriginalValues();
+        }
+
+        public ItemsEntryViewModel(IItemsService itemsService)
+        {
+            _itemsService = itemsService;
+
+            SaveCommand = new RelayCommand(async () => await SaveAsync(), CanSave);
+            NewEntryCommand = new RelayCommand(NewEntry);
+            CloseCommand = new RelayCommand(Close);
+            LoadCommand = new RelayCommand(async () => await LoadAsync());
+
+            CreatedAt = DateTime.Now;
+            Title = string.Empty;
+            Description = string.Empty;
+            IsEditMode = false;
+
+            CaptureOriginalValues();
+        }
+
         public RelayCommand SaveCommand { get; }
+        public RelayCommand LoadCommand { get; }
+        public ICommand NewEntryCommand { get; }
+        public ICommand CloseCommand { get; }
+        public ICommand SelectImageCommand => new RelayCommand(SelectImage);
 
         private int _itemId;
         public int ItemId
@@ -29,7 +63,7 @@ namespace BargainVault.ViewModels.Items
                 if (SetProperty(ref _itemId, value))
                 {
                     OnPropertyChanged(nameof(HeaderText));
-                }                   
+                }
             }
         }
 
@@ -40,42 +74,10 @@ namespace BargainVault.ViewModels.Items
             set
             {
                 if (SetProperty(ref _isDirty, value))
-                    ((RelayCommand)SaveCommand).RaiseCanExecuteChanged();
+                {
+                    SaveCommand.RaiseCanExecuteChanged();
+                }
             }
-        }
-
-        public ItemsEntryViewModel(IItemsService itemsService, ItemDto item) 
-            : this(itemsService)
-        {
-            _itemsService = itemsService;
-
-            ItemId = item.ItemId;
-            LotNumber = item.LotNumber;
-            Title = item.Title;
-            Description = item.Description;
-            CreatedAt = item.CreatedAt;
-            ImagePath = item.ImagePath;
-           
-            SaveCommand = new RelayCommand(async () => await SaveAsync(), CanSave);
-            NewEntryCommand = new RelayCommand(NewEntry);
-            CloseCommand = new RelayCommand(Close);
-            LoadCommand = new RelayCommand(async () => await LoadAsync());
-            CaptureOriginalValues();
-        }
-
-        public ItemsEntryViewModel(IItemsService itemsService)
-        {
-            _itemsService = itemsService;
-
-            CreatedAt = DateTime.Now;
-            IsEditMode = false;
-
-            SaveCommand = new RelayCommand(
-                    async () => await SaveAsync(),
-                    CanSave);
-            NewEntryCommand = new RelayCommand(NewEntry);
-
-            CaptureOriginalValues();
         }
 
         private bool _isEditMode;
@@ -85,28 +87,16 @@ namespace BargainVault.ViewModels.Items
             private set => SetProperty(ref _isEditMode, value);
         }
 
-        private void CaptureOriginalValues()
-        {
-            _originalTitle = Title;
-            _originalDescription = Description;
-            _originalLotNumber = LotNumber;
-            IsDirty = false;
-        }
+        public ObservableCollection<ItemDto> Items { get; } = new();
 
-
-        public ObservableCollection<ItemDto> Items { get; }
-                = new ObservableCollection<ItemDto>();
-
-        private ItemDto _selectedItem;
-        public ItemDto SelectedItem
+        private ItemDto? _selectedItem;
+        public ItemDto? SelectedItem
         {
             get => _selectedItem;
             set => SetProperty(ref _selectedItem, value);
         }
 
-        public RelayCommand LoadCommand { get; }
-
-        private int _lotNumber = 0;
+        private int _lotNumber;
         public int LotNumber
         {
             get => _lotNumber;
@@ -117,7 +107,7 @@ namespace BargainVault.ViewModels.Items
             }
         }
 
-        private string _title;
+        private string _title = string.Empty;
         public string Title
         {
             get => _title;
@@ -129,7 +119,7 @@ namespace BargainVault.ViewModels.Items
             }
         }
 
-        private string _description;
+        private string _description = string.Empty;
         public string Description
         {
             get => _description;
@@ -147,7 +137,10 @@ namespace BargainVault.ViewModels.Items
             set
             {
                 if (SetProperty(ref _createdAt, value))
+                {
                     OnPropertyChanged(nameof(CreatedAtDisplay));
+                }
+
                 OnPropertyChanged(nameof(DaysInInventoryDisplay));
             }
         }
@@ -181,15 +174,26 @@ namespace BargainVault.ViewModels.Items
             }
         }
 
-        public string HeaderText =>
-            ItemId > 0
-            ? $" ID: {ItemId}"
-            : "Item Entry — New Item";
+        public string HeaderText => ItemId > 0 ? $" ID: {ItemId}" : "Item Entry — New Item";
+
+        private BitmapImage? _itemImage;
+        public BitmapImage? ItemImage
+        {
+            get => _itemImage;
+            private set => SetProperty(ref _itemImage, value);
+        }
+
+        private void CaptureOriginalValues()
+        {
+            _originalTitle = Title;
+            _originalDescription = Description;
+            _originalLotNumber = LotNumber;
+            IsDirty = false;
+        }
 
         private void LoadImageFromPath()
         {
-            if (string.IsNullOrWhiteSpace(ImagePath) 
-                || !File.Exists(ImagePath))
+            if (string.IsNullOrWhiteSpace(ImagePath) || !File.Exists(ImagePath))
             {
                 ItemImage = null;
                 return;
@@ -212,13 +216,6 @@ namespace BargainVault.ViewModels.Items
             }
         }
 
-        private BitmapImage? _itemImage;
-        public BitmapImage? ItemImage
-        {
-            get => _itemImage;
-            private set => SetProperty(ref _itemImage, value);
-        }
-
         private void UpdateDirtyState()
         {
             IsDirty =
@@ -226,12 +223,8 @@ namespace BargainVault.ViewModels.Items
                 Description != _originalDescription ||
                 LotNumber != _originalLotNumber;
 
-            SaveCommand?.RaiseCanExecuteChanged();
+            SaveCommand.RaiseCanExecuteChanged();
         }
-
-
-        public ICommand NewEntryCommand { get; }
-        public ICommand CloseCommand { get; }
 
         private bool CanSave()
         {
@@ -242,16 +235,13 @@ namespace BargainVault.ViewModels.Items
         {
             if (ItemId == 0)
             {
-
-                var itemId = await _itemsService.InsertItemAsync(
+                await _itemsService.InsertItemAsync(
                     LotNumber,
                     Title,
                     Description,
-                    ImagePath,
+                    ImagePath ?? string.Empty,
                     1,
-                    Environment.UserName
-                );
-
+                    Environment.UserName);
             }
             else
             {
@@ -260,11 +250,11 @@ namespace BargainVault.ViewModels.Items
                     LotNumber,
                     Title,
                     Description,
-                    ImagePath,
+                    ImagePath ?? string.Empty,
                     1,
-                    Environment.UserName
-                );
+                    Environment.UserName);
             }
+
             NewEntry();
         }
 
@@ -284,12 +274,16 @@ namespace BargainVault.ViewModels.Items
             Items.Clear();
             var items = await _itemsService.GetItemsAsync();
             foreach (var item in items)
+            {
                 Items.Add(item);
+            }
         }
 
         public async Task LoadAsync(int itemId)
         {
             var dto = await _itemsService.GetItemByIdAsync(itemId);
+            if (dto == null)
+                return;
 
             ItemId = dto.ItemId;
             LotNumber = dto.LotNumber;
@@ -300,13 +294,10 @@ namespace BargainVault.ViewModels.Items
             IsEditMode = true;
         }
 
-
         private void Close()
         {
-            Close();
+            // Window closure is handled by the view.
         }
-
-        public ICommand SelectImageCommand => new RelayCommand(SelectImage);
 
         private void SelectImage()
         {
@@ -321,7 +312,5 @@ namespace BargainVault.ViewModels.Items
                 OnPropertyChanged(nameof(ItemImage));
             }
         }
-
     }
-
 }

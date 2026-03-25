@@ -1,6 +1,5 @@
-﻿using BargainVault.Domain.Services;
+using BargainVault.Domain.Services;
 using BargainVault.ViewModels.Items;
-using BargainVault.ViewModels.Items.BargainVault.ViewModels.Items;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
 using System.Windows.Input;
@@ -27,7 +26,6 @@ namespace BargainVault.Views.Items
 
             var editView = App.Services.GetRequiredService<ItemsEntryView>();
 
-            // Inject selected item into edit mode
             editView.DataContext = new ItemsEntryViewModel(
                 App.Services.GetRequiredService<IItemsService>(),
                 vm.SelectedItem);
@@ -35,7 +33,6 @@ namespace BargainVault.Views.Items
             editView.Owner = this;
             editView.ShowDialog();
 
-            // Refresh list after edit
             _ = vm.LoadAsync();
         }
 
@@ -58,7 +55,6 @@ namespace BargainVault.Views.Items
             editView.Owner = this;
             editView.ShowDialog();
 
-            // Refresh list after edit
             _ = vm.LoadAsync();
         }
     }

@@ -3,30 +3,17 @@ using BargainVault.Domain.Models;
 using BargainVault.Domain.Services;
 using BargainVault.ViewModels.Base;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 using System.Windows;
 
 namespace BargainVault.ViewModels
 {
     public class SalesEntryViewModel : ViewModelBase
     {
-        private readonly ISalesService _service;
         private int? _saleId;
         private readonly ISalesService _salesService;
         private readonly IItemsService _itemsService;
         private readonly IBoothsService _boothsService;
-       
-        public SalesEntryViewModel(ISalesService service)
-        {
-            _service = service;
-
-            DateSold = DateTime.Today;
-            QtySold = 1;
-
-            SaveCommand = new RelayCommand(async () => await SaveAsync(), CanSave);
-        }
 
         public SalesEntryViewModel(
             ISalesService salesService,
@@ -171,7 +158,7 @@ namespace BargainVault.ViewModels
             }
             else
             {
-                await _service.UpdateSaleAsync(dto, Environment.UserName);
+                await _salesService.UpdateSaleAsync(dto, Environment.UserName);
                 MessageBox.Show("Sale updated.", "Saved");
             }
         }
