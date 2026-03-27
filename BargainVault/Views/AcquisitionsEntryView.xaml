@@ -182,23 +182,27 @@
                      Margin="4"/>
 
             <!-- Buyer Premium -->
-            <TextBlock Text="Buyer Premium"
+            <TextBlock Text="Buyer Premium (15%)"
                        Grid.Row="6"
                        Grid.Column="0"
                        VerticalAlignment="Center"/>
             <TextBox Grid.Row="6"
                      Grid.Column="1"
-                     Text="{Binding BuyerPremium}"
+                     Text="{Binding BuyerPremium, Mode=OneWay}"
+                     IsReadOnly="True"
+                     Background="#EEE"
                      Margin="4"/>
 
             <!-- Tax Rate -->
-            <TextBlock Text="Tax Rate"
+            <TextBlock Text="Tax Rate (8.1%)"
                        Grid.Row="7"
                        Grid.Column="0"
                        VerticalAlignment="Center"/>
             <TextBox Grid.Row="7"
                      Grid.Column="1"
-                     Text="{Binding TaxRate}"
+                     Text="{Binding TaxRate, Mode=OneWay}"
+                     IsReadOnly="True"
+                     Background="#EEE"
                      Margin="4"/>
 
             <!-- Sales Tax Paid (Read-only) -->

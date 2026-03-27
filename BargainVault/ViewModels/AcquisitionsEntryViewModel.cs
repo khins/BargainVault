@@ -12,6 +12,9 @@ namespace BargainVault.ViewModels.Acquisitions
 {
     public class AcquisitionsEntryViewModel : ViewModelBase
     {
+        private const decimal BuyerPremiumRate = 0.15m;
+        private const decimal AuctionTaxRate = 0.081m;
+
         private readonly IAcquisitionsService _acquisitionsService;
         private readonly IItemsService _itemsService;
         private readonly ILookupsService _lookupsService;
@@ -33,6 +36,7 @@ namespace BargainVault.ViewModels.Acquisitions
             SaveCommand = new RelayCommand(async () => await SaveAsync(), CanSave);
 
             DateAcquired = DateTime.Today;
+            TaxRate = AuctionTaxRate;
 
             _ = LoadLookupsAsync();
         }
@@ -134,7 +138,13 @@ namespace BargainVault.ViewModels.Acquisitions
         public int QtyAcquired
         {
             get => _qtyAcquired;
-            set => SetProperty(ref _qtyAcquired, value);
+            set
+            {
+                if (SetProperty(ref _qtyAcquired, value))
+                {
+                    RecalculateTotals();
+                }
+            }
         }
 
         private decimal? _unitHammerPrice;
@@ -153,23 +163,14 @@ namespace BargainVault.ViewModels.Acquisitions
         public decimal? BuyerPremium
         {
             get => _buyerPremium;
-            set
-            {
-                SetProperty(ref _buyerPremium, value);
-                RecalculateTotals();
-                SaveCommand.RaiseCanExecuteChanged();
-            }
+            private set => SetProperty(ref _buyerPremium, value);
         }
 
         private decimal? _taxRate;
         public decimal? TaxRate
         {
             get => _taxRate;
-            set
-            {
-                SetProperty(ref _taxRate, value);
-                RecalculateTotals();
-            }
+            private set => SetProperty(ref _taxRate, value);
         }
 
         private decimal? _salesTaxPaid;
@@ -318,7 +319,7 @@ namespace BargainVault.ViewModels.Acquisitions
 
             UnitHammerPrice = null;
             BuyerPremium = null;
-            TaxRate = null;
+            TaxRate = AuctionTaxRate;
 
             SalesTaxPaid = null;
             TotalSettlement = null;
@@ -337,15 +338,15 @@ namespace BargainVault.ViewModels.Acquisitions
 
         private void RecalculateTotals()
         {
-            var baseAmount =
-                (UnitHammerPrice ?? 0m) +
-                (BuyerPremium ?? 0m);
+            var quantity = QtyAcquired > 0 ? QtyAcquired : 1;
+            var hammerSubtotal = Math.Round((UnitHammerPrice ?? 0m) * quantity, 2);
 
-            SalesTaxPaid = TaxRate.HasValue
-                ? Math.Round(baseAmount * TaxRate.Value, 2)
-                : 0m;
+            BuyerPremium = Math.Round(hammerSubtotal * BuyerPremiumRate, 2);
+            TaxRate = AuctionTaxRate;
 
-            TotalSettlement = baseAmount + (SalesTaxPaid ?? 0m);
+            var taxableAmount = hammerSubtotal + (BuyerPremium ?? 0m);
+            SalesTaxPaid = Math.Round(taxableAmount * AuctionTaxRate, 2);
+            TotalSettlement = taxableAmount + (SalesTaxPaid ?? 0m);
         }
 
         private async Task LoadLookupsAsync()
@@ -399,9 +400,8 @@ namespace BargainVault.ViewModels.Acquisitions
             DateAcquired = dto.DateAcquired;
             QtyAcquired = dto.QtyAcquired;
             UnitHammerPrice = dto.UnitHammerPrice;
-            BuyerPremium = dto.BuyerPremium;
-            SalesTaxPaid = dto.SalesTaxPaid;
-            TotalSettlement = dto.TotalSettlement;
+            TaxRate = AuctionTaxRate;
+            RecalculateTotals();
 
             IsPersonal = dto.Personal;
             IsBusinessExpense = dto.BusinessExpense;
