@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="BargainVault"
         Width="420"
-        Height="975"
+        Height="1075"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         UseLayoutRounding="True"
@@ -154,6 +154,10 @@
                 <Button Content="Global Search"
         Style="{StaticResource MainMenuButtonStyle}"
         Click="OpenGlobalSearch_Click"/>
+
+                <Button Content="Liquidation Candidates"
+        Style="{StaticResource MainMenuButtonStyle}"
+        Click="OpenLiquidationCandidates_Click"/>
 
                 <Button Content="Exit"
         Style="{StaticResource MainMenuButtonStyle}"

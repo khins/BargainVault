@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using BargainVault.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace BargainVault.Views
 {
@@ -17,9 +8,37 @@ namespace BargainVault.Views
     /// </summary>
     public partial class LiquidationView : Window
     {
-        public LiquidationView()
+        private readonly LiquidationViewModel _viewModel;
+
+        public LiquidationView(LiquidationViewModel viewModel)
         {
             InitializeComponent();
+            _viewModel = viewModel;
+            DataContext = viewModel;
+
+            Loaded += async (_, _) => await _viewModel.LoadAsync();
+        }
+
+        private async void SetDisregard_Click(object sender, RoutedEventArgs e)
+        {
+            if (_viewModel.SelectedCandidate == null)
+                return;
+
+            var confirm = MessageBox.Show(
+                $"Mark '{_viewModel.SelectedCandidate.Title}' as disregard and remove it from this list?",
+                "Confirm Disregard",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes)
+                return;
+
+            await _viewModel.MarkSelectedAsDisregardAsync();
+        }
+
+        private async void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            await _viewModel.LoadAsync();
         }
     }
 }

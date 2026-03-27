@@ -23,43 +23,59 @@ namespace BargainVault.Domain.Services
         {
             var results = new List<LiquidationCandidateDto>();
 
-            using var conn = new NpgsqlConnection(_connectionString);
+            await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync();
 
-            var sql = @"SELECT *
-                    FROM vw_liquidation_candidates
-                    ORDER BY ile_score DESC, days_in_inventory DESC";
+            const string sql = @"
+                select item_id,
+                       title,
+                       total_settlement,
+                       auction_estimate,
+                       recommendation
+                from public.vw_liquidation_candidates
+                where disregard = false
+                  and total_settlement is not null
+                order by title;";
 
-            using var cmd = new NpgsqlCommand(sql, conn);
-            using var reader = await cmd.ExecuteReaderAsync();
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
 
             while (await reader.ReadAsync())
             {
-                var item = new LiquidationCandidateDto
+                results.Add(new LiquidationCandidateDto
                 {
                     ItemId = reader.GetInt32(reader.GetOrdinal("item_id")),
                     Title = reader.GetString(reader.GetOrdinal("title")),
-                    DaysInInventory = reader.GetInt32(reader.GetOrdinal("days_in_inventory")),
-                    AuctionPct = reader.GetDecimal(reader.GetOrdinal("auction_pct")),
-                    IleScore = reader.GetInt32(reader.GetOrdinal("ile_score")),
-                    Recommendation = reader.GetString(reader.GetOrdinal("recommendation")),
-                    RetailPrice = reader.IsDBNull(reader.GetOrdinal("retail_price"))
+                    TotalSettlement = reader.IsDBNull(reader.GetOrdinal("total_settlement"))
                         ? null
-                        : reader.GetDecimal(reader.GetOrdinal("retail_price")),
+                        : reader.GetDecimal(reader.GetOrdinal("total_settlement")),
                     AuctionEstimate = reader.IsDBNull(reader.GetOrdinal("auction_estimate"))
                         ? null
-                        : reader.GetDecimal(reader.GetOrdinal("auction_estimate"))
-                };
-
-                results.Add(item);
+                        : reader.GetDecimal(reader.GetOrdinal("auction_estimate")),
+                    Recommendation = reader.IsDBNull(reader.GetOrdinal("recommendation"))
+                        ? string.Empty
+                        : reader.GetString(reader.GetOrdinal("recommendation"))
+                });
             }
 
             return results;
         }
 
-        public Task MarkDisregardAsync(int itemId, bool value)
+        public async Task MarkDisregardAsync(int itemId, bool value)
         {
-            throw new NotImplementedException();
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            const string sql = @"
+                update public.items
+                set disregard = @disregard
+                where item_id = @item_id;";
+
+            await using var cmd = new NpgsqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("disregard", value);
+            cmd.Parameters.AddWithValue("item_id", itemId);
+
+            await cmd.ExecuteNonQueryAsync();
         }
     }
 
